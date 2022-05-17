@@ -14,8 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MyAudio: {fileID: 8300000, guid: 33e3c509463ac1d4db4fe03e26fab7fc, type: 3}
   TimePoints:
-  - 0.37037036
-  - 0.7407407
   - 1.1111112
   - 1.4814814
   - 1.8518518
@@ -37,3 +35,10 @@ MonoBehaviour:
   - 8.148149
   - 9.259259
   - 9.62963
+  DefencePoints:
+  - TimePoint: 0
+    x: 0
+    y: 0
+  - TimePoint: 0
+    x: 0
+    y: 0

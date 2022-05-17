@@ -50,7 +50,7 @@ public class MusicMgr : MonoBehaviour
         } //¸üÐÂnoteµÄObject
 
         {
-            List<float> timePoints = MusicData.TimePoints;
+            List<float> timePoints = MusicData.AttackPoints;
             _pointNumb = timePoints.Count;
 
             {

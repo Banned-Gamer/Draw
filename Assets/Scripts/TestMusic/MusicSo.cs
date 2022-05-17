@@ -6,5 +6,21 @@ using UnityEngine;
 public class MusicSo : ScriptableObject
 {
     public AudioClip MyAudio;
-    public List<float> TimePoints;
+    public List<float> AttackPoints;
+    public List<DefencePoint> DefencePoints;
+
+    [System.Serializable]
+    public class DefencePoint
+    {
+        public float TimePoint;
+        public float x;
+        public float y;
+
+        public DefencePoint(float timePoint, float inX, float inY)
+        {
+            TimePoint = timePoint;
+            x = inX;
+            y = inY;
+        }
+    }
 }

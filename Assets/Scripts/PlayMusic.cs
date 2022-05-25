@@ -91,7 +91,9 @@ public class PlayMusic : MonoBehaviour
             if (_sumTime > _defenceEndTimes[_currentDefenceIndex])
             {
                 EndDefence();
-                //受伤
+
+                {
+                } //受伤
                 _currentDefenceIndex++;
             } //到达防御note的结束时间
 
@@ -224,7 +226,6 @@ public class PlayMusic : MonoBehaviour
         }
     } //超时，结束攻击note
 
-
     public void AttackNote(int Score)
     {
         if (_currentAttackIndex < _attackPointNumb)
@@ -266,4 +267,22 @@ public class PlayMusic : MonoBehaviour
             nowObject.EndDefenceNote();
         }
     } //超时，结束防御note
+
+    public void Defence()
+    {
+        if (_currentDefenceIndex < _defencePointNumb)
+        {
+            if (_sumTime >= _defenceBeginTimes[_currentDefenceIndex] &&
+                _sumTime <= _defenceEndTimes[_currentDefenceIndex])
+            {
+                if (_onUsedDefenceNotes.Count > 0)
+                {
+                    PlayDefenceNote nowObject;
+                    nowObject = _onUsedDefenceNotes[0];
+                    _defenceNotes.Add(nowObject);
+                    _onUsedDefenceNotes.RemoveAt(0);
+                }
+            }
+        }
+    } //主动进行防御
 }

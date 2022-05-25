@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayDefenceNote : MonoBehaviour
 {
+    public PlayMusic MyPlayMusic;
+
     private MusicSo.DefencePoint _myDefencePoint;
 
     private Animator _animator;
@@ -34,6 +36,8 @@ public class PlayDefenceNote : MonoBehaviour
         {
             _animator.SetBool(_Isbegin, false);
             _animator.SetBool(_IsAttack, true);
+
+            MyPlayMusic.Defence();
         }
     }
 }

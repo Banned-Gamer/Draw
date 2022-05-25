@@ -28,7 +28,7 @@ public class PlayNote : MonoBehaviour
             {
                 _isStop = false;
                 _selfAnimator.SetBool(_beginAttackNote, false);
-            }
+            }//begin状态需要关闭，但又不是一开始就关闭，所以静置一秒
 
             if (_sumTime > 2)
             {

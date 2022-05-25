@@ -6,16 +6,16 @@ using UnityEngine.UI;
 
 public class PlayMusic : MonoBehaviour
 {
-    public Text ComboText;
+    public Text HealthText;
     public Text ScoreText;
 
     public MusicSo MusicData;
     public float MoveTime;
-    public float PerfectTime;
     public float GoodTime;
 
     [SerializeField] private Transform _attackCircleParent;
     [SerializeField] private Transform _defenceParent;
+    [SerializeField] private float _defenceDelay;
 
     private List<PlayNote> _attackCircles = new List<PlayNote>();
     private List<PlayNote> _onUsedAttackCircles = new List<PlayNote>();
@@ -42,8 +42,9 @@ public class PlayMusic : MonoBehaviour
     private int _currentAttackUsableIndex;
     private int _currentDefenceUsableIndex;
     private int _gameScore;
-    private int _comboNumb;
+    private int _gameHealth;
     private float _sumTime;
+    private float _targetTime;
     private bool _isPlay = false;
 
     void Start()
@@ -59,11 +60,13 @@ public class PlayMusic : MonoBehaviour
         {
             //计算时间
             _sumTime += Time.deltaTime;
+            //Debug.Log("time:" + _sumTime.ToString());
 
             if (_currentAttackUsableIndex < _attackPointNumb)
             {
                 if (_sumTime >= _attackBeginNoteTimes[_currentAttackUsableIndex])
                 {
+                    Debug.Log("begin attack");
                     BeginAttack();
 
                     _currentAttackUsableIndex++;
@@ -72,32 +75,37 @@ public class PlayMusic : MonoBehaviour
 
             if (_currentDefenceUsableIndex < _defencePointNumb)
             {
-                if (_sumTime >= _defenceBeginTimes[_currentDefenceUsableIndex])
+                if (_sumTime >= _defenceBeginNoteTimes[_currentDefenceUsableIndex])
                 {
+                    Debug.Log("begin defence");
                     BeginDefence();
 
                     _currentDefenceUsableIndex++;
                 }
             } //开始放置防御note
 
-            if (_sumTime > _attackEndTimes[_currentAttackIndex])
+            if (_currentAttackIndex < _attackPointNumb)
             {
-                EndAttack();
-
-                _comboNumb = 0;
-                _currentAttackIndex++;
-            } //到达攻击note的结束时间
-
-            if (_sumTime > _defenceEndTimes[_currentDefenceIndex])
-            {
-                EndDefence();
-
+                if (_sumTime > _attackEndTimes[_currentAttackIndex])
                 {
-                } //受伤
-                _currentDefenceIndex++;
-            } //到达防御note的结束时间
+                    Debug.Log("attack over time");
+                    EndAttack();
+                    _currentAttackIndex++;
+                } //到达攻击note的结束时间
+            }
 
-            if (_currentAttackIndex >= _attackPointNumb && _currentDefenceIndex >= _defencePointNumb)
+            if (_currentDefenceIndex < _defencePointNumb)
+            {
+                if (_sumTime > _defenceEndTimes[_currentDefenceIndex])
+                {
+                    EndDefence();
+
+                    _currentDefenceIndex++;
+                } //到达防御note的结束时间
+            }
+
+
+            if (_sumTime >= _targetTime)
             {
                 _isPlay = false;
                 _audioSource.Stop();
@@ -176,14 +184,14 @@ public class PlayMusic : MonoBehaviour
 
             for (_i = 0; _i < _defencePointNumb; _i++)
             {
-                _defenceBeginNoteTimes.Add(defencePoints[_i].TimePoint - GoodTime / 1000);
+                _defenceBeginNoteTimes.Add(defencePoints[_i].TimePoint - GoodTime / 1000 - _defenceDelay);
                 _defenceBeginTimes.Add(defencePoints[_i].TimePoint - GoodTime / 1000 + MoveTime);
                 _defenceEndTimes.Add(defencePoints[_i].TimePoint + GoodTime / 1000 + MoveTime);
             }
         }
 
         {
-            _comboNumb = 0;
+            _gameHealth = 100;
             _gameScore = 0;
         }
 
@@ -194,9 +202,11 @@ public class PlayMusic : MonoBehaviour
 
             _currentDefenceIndex = 0;
             _currentDefenceUsableIndex = 0;
+            _targetTime = MusicData.MaxTime;
         } //时间和index归零
 
         _isPlay = true;
+
 
         _audioSource.PlayDelayed(MoveTime);
     }
@@ -252,7 +262,7 @@ public class PlayMusic : MonoBehaviour
             nowObject = _defenceNotes[0];
             _defenceNotes.RemoveAt(0);
             _onUsedDefenceNotes.Add(nowObject);
-            nowObject.BeginDefenceNote(defencePoints[_currentAttackUsableIndex]);
+            nowObject.BeginDefenceNote(MusicData.DefencePoints[_currentDefenceUsableIndex]);
         }
     } //开始放置防御note
 
@@ -265,11 +275,15 @@ public class PlayMusic : MonoBehaviour
             _defenceNotes.Add(nowObject);
             _onUsedDefenceNotes.RemoveAt(0);
             nowObject.EndDefenceNote();
+            _gameHealth -= 10;
+            HealthText.text = _gameHealth.ToString();
+            Debug.Log("defence over time");
         }
     } //超时，结束防御note
 
     public void Defence()
     {
+        Debug.Log("defence success");
         if (_currentDefenceIndex < _defencePointNumb)
         {
             if (_sumTime >= _defenceBeginTimes[_currentDefenceIndex] &&
@@ -281,6 +295,7 @@ public class PlayMusic : MonoBehaviour
                     nowObject = _onUsedDefenceNotes[0];
                     _defenceNotes.Add(nowObject);
                     _onUsedDefenceNotes.RemoveAt(0);
+                    _currentAttackIndex++;
                 }
             }
         }

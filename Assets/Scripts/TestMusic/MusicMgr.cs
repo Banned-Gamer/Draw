@@ -28,6 +28,7 @@ public class MusicMgr : MonoBehaviour
     private int _currentIndex;
     private int _currentUsableIndex;
     private float _sumTime;
+    private float _targetTime;
     private int _gameScore;
     private int _comboNumb;
     private bool _isPlay = false;
@@ -85,7 +86,6 @@ public class MusicMgr : MonoBehaviour
         } //score∫ÕcomboπÈ¡„
 
         _isPlay = true;
-
         _audioSource.PlayDelayed(MoveTime);
     }
 

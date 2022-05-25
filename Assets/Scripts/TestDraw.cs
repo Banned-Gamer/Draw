@@ -58,7 +58,6 @@ public class TestDraw : MonoBehaviour
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    Debug.Log("in mouse down");
                     _currentAttackArea = 0;
                     ++_strokeId;
 
@@ -76,7 +75,6 @@ public class TestDraw : MonoBehaviour
 
                 if (Input.GetMouseButton(0))
                 {
-                    Debug.Log("in mouse");
                     switch (_currentAttackArea)
                     {
                         case 0:
@@ -143,7 +141,7 @@ public class TestDraw : MonoBehaviour
                         {
                             OnAttackMouseUp();
                             break;
-                            }
+                        }
                         default:
                             break;
                     }
@@ -196,7 +194,7 @@ public class TestDraw : MonoBehaviour
     {
         Gesture candidate = new Gesture(_attackPoints.ToArray());
         Result gestureResult = PointCloudRecognizer.Classify(candidate, _trainSet.ToArray());
-        Debug.Log(gestureResult.GestureClass+gestureResult.Score);
+        Debug.Log(gestureResult.GestureClass + gestureResult.Score);
         if (gestureResult.GestureClass == "target") return 1;
         return 0;
     }
@@ -204,20 +202,20 @@ public class TestDraw : MonoBehaviour
     void OnAttackMouseUp()
     {
         _currentAttackArea = -1;
-        Debug.Log("begin recognize");
+        //Debug.Log("begin recognize");
         if (_attackPoints.Count > 1)
         {
             int result = RecognizeGesture();
             if (result == 1)
             {
                 _musicMgr.AttackNote(3);
-                Debug.Log("recognize finish");
+                //Debug.Log("recognize finish");
                 ClearAttackDraw();
             }
             else
             {
                 _musicMgr.AttackNote(1);
-                Debug.Log("fail");
+                //Debug.Log("fail");
             }
         }
     }

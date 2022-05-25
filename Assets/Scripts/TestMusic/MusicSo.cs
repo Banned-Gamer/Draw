@@ -8,6 +8,7 @@ public class MusicSo : ScriptableObject
     public AudioClip MyAudio;
     public List<float> AttackPoints;
     public List<DefencePoint> DefencePoints;
+    public float MaxTime;
 
     [System.Serializable]
     public class DefencePoint

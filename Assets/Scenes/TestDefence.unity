@@ -289,7 +289,19 @@ MonoBehaviour:
   _defenceTransform: {fileID: 1531490699}
   _musicMgr: {fileID: 0}
   GesturePrefabTransform: {fileID: 400000, guid: 66134aff6b8d41749bc11d52d2ed3c40, type: 3}
+  _virtualKeyPosition: {x: 0, y: 0, z: 0}
+  _drawArea:
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  _attackLineRenderers: []
+  _defenceLineRenderers: []
+  _curretnLineRenderer: {fileID: 0}
+  _vertexCount: 0
+  _strokeId: -1
   IsDraw: 1
+  _currentAttackArea: -1
 --- !u!1 &1531490698
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,14 +342,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1531490698}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 666556763f49bfa47bd69ccd59fe6b56, type: 3}
+  m_Script: {fileID: 11500000, guid: bd8a208bd6cb0dc41b2ca4588097dd2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackTransform: {fileID: 0}
-  _defenceTransform: {fileID: 0}
-  _musicMgr: {fileID: 0}
-  GesturePrefabTransform: {fileID: 0}
-  IsDraw: 0
+  data: {fileID: 11400000, guid: 01dab2c602129db47a640eba227d47e4, type: 2}
 --- !u!1 &2075218311 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7103403266193621917, guid: ff13c97b0ba82fe46b8c57541ec3aa13, type: 3}
@@ -362,6 +370,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2075218313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2075218311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dea1ab78a488f24a8238c2f2d936a6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7103403267411104282
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -429,5 +449,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7103403266193621906, guid: ff13c97b0ba82fe46b8c57541ec3aa13, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ff13c97b0ba82fe46b8c57541ec3aa13, type: 3}

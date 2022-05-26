@@ -98,6 +98,7 @@ public class PlayMusic : MonoBehaviour
             {
                 if (_sumTime > _defenceEndTimes[_currentDefenceIndex])
                 {
+                    Debug.Log("c " + _currentDefenceIndex);
                     EndDefence();
 
                     _currentDefenceIndex++;
@@ -286,6 +287,8 @@ public class PlayMusic : MonoBehaviour
         Debug.Log("defence success");
         if (_currentDefenceIndex < _defencePointNumb)
         {
+            Debug.Log("a " + _defenceBeginNoteTimes[_currentDefenceIndex]);
+            Debug.Log("b " + _defenceEndTimes[_currentDefenceIndex]);
             if (_sumTime >= _defenceBeginTimes[_currentDefenceIndex] &&
                 _sumTime <= _defenceEndTimes[_currentDefenceIndex])
             {

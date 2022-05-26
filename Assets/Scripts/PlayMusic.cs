@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UI; 
 
 public class PlayMusic : MonoBehaviour
 {
     public Text HealthText;
     public Text ScoreText;
+    public GameObject CombineText;
 
     public MusicSo MusicData;
     public float MoveTime;
@@ -234,6 +235,7 @@ public class PlayMusic : MonoBehaviour
             _onUsedAttackCircles.RemoveAt(0);
 
             nowObject.EndAttackNote();
+            ScoreText.text = _gameScore.ToString();
         }
     } //³¬Ê±£¬½áÊø¹¥»÷note
 
@@ -299,6 +301,7 @@ public class PlayMusic : MonoBehaviour
                     _defenceNotes.Add(nowObject);
                     _onUsedDefenceNotes.RemoveAt(0);
                     _currentAttackIndex++;
+                    HealthText.text = _gameHealth.ToString();
                 }
             }
         }

@@ -302,6 +302,7 @@ public class PlayMusic : MonoBehaviour
                     _onUsedDefenceNotes.RemoveAt(0);
                     _currentAttackIndex++;
                     HealthText.text = _gameHealth.ToString();
+
                 }
             }
         }

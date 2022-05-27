@@ -9,7 +9,7 @@ public class PlayMusic : MonoBehaviour
     public Text HealthText;
     public Text ScoreText;
     public GameObject CombineText;
-
+    public Animator ComboAnimator;
     public MusicSo MusicData;
     public float MoveTime;
     public float GoodTime;
@@ -183,6 +183,8 @@ public class PlayMusic : MonoBehaviour
         {
             _gameHealth = 100;
             _gameScore = 0;
+            ScoreText.text = _gameScore.ToString();
+            HealthText.text = _gameHealth.ToString();
         }
 
         {
@@ -233,8 +235,6 @@ public class PlayMusic : MonoBehaviour
         Debug.Log("add attack" + _currentAttackIndex + ' ' + _attackPointNumb);
         if (_currentAttackIndex < _attackPointNumb)
         {
-            Debug.Log(_sumTime + ' ' + _attackBeginTimes[_currentAttackIndex] + ' ' +
-                      _attackEndTimes[_currentAttackIndex]);
             if (_sumTime >= _attackBeginTimes[_currentAttackIndex] && _sumTime <= _attackEndTimes[_currentAttackIndex])
             {
                 Debug.Log("attack finish");
@@ -242,7 +242,8 @@ public class PlayMusic : MonoBehaviour
                     _gameScore += Score;
                     ScoreText.text = _gameScore.ToString();
                 }
-
+                ComboAnimator.SetBool("IsAcitivity",true);
+                StartCoroutine(waitor());
                 EndAttack();
                 _currentAttackIndex++;
             }
@@ -289,10 +290,16 @@ public class PlayMusic : MonoBehaviour
                     nowObject = _onUsedDefenceNotes[0];
                     _defenceNotes.Add(nowObject);
                     _onUsedDefenceNotes.RemoveAt(0);
-                    _currentAttackIndex++;
+                    _currentDefenceIndex++;
                     HealthText.text = _gameHealth.ToString();
                 }
             }
         }
     } //主动进行防御
+
+    IEnumerator waitor()
+    {
+        yield return new WaitForSeconds(0.05f);
+        ComboAnimator.SetBool("IsAcitivity", false);
+    }
 }

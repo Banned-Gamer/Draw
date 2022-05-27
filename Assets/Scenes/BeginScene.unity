@@ -494,7 +494,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u6E38\u620F\u8BF4\u660E"
+  m_Text: "\u7ED3\u675F\u6E38\u620F"
 --- !u!222 &411201846
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -628,7 +628,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 849684215}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 622499208}
+        m_TargetAssemblyTypeName: SceneSwitch, Assembly-CSharp
+        m_MethodName: Finish
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &849684215
 MonoBehaviour:
   m_ObjectHideFlags: 0

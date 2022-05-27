@@ -8,8 +8,8 @@ public class PlayMusic : MonoBehaviour
 {
     public Text HealthText;
     public Text ScoreText;
-    public GameObject CombineText;
     public Animator ComboAnimator;
+    public Animator MissAnimator;
     public MusicSo MusicData;
     public float MoveTime;
     public float GoodTime;
@@ -87,6 +87,8 @@ public class PlayMusic : MonoBehaviour
                 if (_sumTime > _attackEndTimes[_currentAttackIndex])
                 {
                     Debug.Log("attack over time");
+                    MissAnimator.SetBool("IsAcitivity", true);
+                    StartCoroutine(waitor2());
                     EndAttack();
                     _currentAttackIndex++;
                 } //到达攻击note的结束时间
@@ -301,5 +303,11 @@ public class PlayMusic : MonoBehaviour
     {
         yield return new WaitForSeconds(0.05f);
         ComboAnimator.SetBool("IsAcitivity", false);
+    }
+
+    IEnumerator waitor2()
+    {
+        yield return new WaitForSeconds(0.05f);
+        MissAnimator.SetBool("IsAcitivity", false);
     }
 }

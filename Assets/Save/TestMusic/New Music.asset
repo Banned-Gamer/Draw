@@ -12,15 +12,647 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5726844bdf3ecbf47b5d02e92d7486e3, type: 3}
   m_Name: New Music
   m_EditorClassIdentifier: 
-  MyAudio: {fileID: 8300000, guid: 33e3c509463ac1d4db4fe03e26fab7fc, type: 3}
+  MyAudio: {fileID: 8300000, guid: 97de29cbbb708b248aa762e7c48ae0e6, type: 3}
   AttackPoints:
-  - 7
-  - 10
+  - 98.6
+  - 99.55
+  - 107.37
+  - 148.7
+  - 161.4
+  - 161.6
+  - 181.57
   DefencePoints:
-  - TimePoint: 1
+  - TimePoint: 32
+    x: 6.82
+    y: 1.43
+  - TimePoint: 32.975
+    x: -8
+    y: 2.19
+  - TimePoint: 33.475
+    x: -6.64
+    y: 0.72
+  - TimePoint: 33.725
+    x: -8
+    y: -1.52
+  - TimePoint: 34.48
+    x: 5.58
+    y: 2.06
+  - TimePoint: 34.72
+    x: 7.07
+    y: 0.07
+  - TimePoint: 35.15
+    x: 6.19
+    y: -2.19
+  - TimePoint: 37.23
+    x: -8
+    y: 2.8
+  - TimePoint: 37.57
+    x: -7.33
+    y: 1.16
+  - TimePoint: 37.66
+    x: -8
+    y: 0.22
+  - TimePoint: 37.91
+    x: -7.51
+    y: -0.93
+  - TimePoint: 38.145
+    x: 5.2
+    y: 2.18
+  - TimePoint: 38.38
+    x: 6.07
+    y: 0.82
+  - TimePoint: 38.85
+    x: 6.87
+    y: -0.33
+  - TimePoint: 40.95
     x: 6
+    y: 1.84
+  - TimePoint: 41.3
+    x: 7.75
+    y: 0.76
+  - TimePoint: 41.4
+    x: 6.35
+    y: -0.46
+  - TimePoint: 41.6
+    x: 7.89
+    y: -1.54
+  - TimePoint: 41.85
+    x: -6.53
+    y: 1.74
+  - TimePoint: 42.13
+    x: -8
+    y: 0.38
+  - TimePoint: 42.63
+    x: -8
+    y: -1.26
+  - TimePoint: 44.55
+    x: -8
+    y: 1.48
+  - TimePoint: 44.81
+    x: -7.25
+    y: 0.9
+  - TimePoint: 45
+    x: -8
+    y: -0.38
+  - TimePoint: 45.3
+    x: -7.07
+    y: -1.32
+  - TimePoint: 45.5
+    x: 6.4
+    y: 1.78
+  - TimePoint: 45.75
+    x: 6.4
+    y: -0.93
+  - TimePoint: 46.2
+    x: 5.4
+    y: 2.02
+  - TimePoint: 46.45
+    x: 6.31
+    y: 0.59
+  - TimePoint: 46.75
+    x: 7.1
+    y: -0.75
+  - TimePoint: 47.1
+    x: -8
+    y: 1.41
+  - TimePoint: 47.35
+    x: -7.19
+    y: 0.1
+  - TimePoint: 47.6
+    x: -8
+    y: -1.63
+  - TimePoint: 47.85
+    x: -8
+    y: 1.93
+  - TimePoint: 47.95
+    x: -7.04
+    y: 0.68
+  - TimePoint: 48.05
+    x: -8
+    y: -0.54
+  - TimePoint: 48.3
+    x: -6.92
+    y: -1.66
+  - TimePoint: 48.6
+    x: 5.88
+    y: 1.71
+  - TimePoint: 48.75
+    x: 8
+    y: 0.4
+  - TimePoint: 49
+    x: 6.06
+    y: -1.21
+  - TimePoint: 49.5
+    x: 5.7
+    y: 2.75
+  - TimePoint: 49.65
+    x: 7.83
+    y: 1.9
+  - TimePoint: 49.95
+    x: 5.94
+    y: 0.64
+  - TimePoint: 50.05
+    x: 7.99
+    y: 0.01
+  - TimePoint: 50.4
+    x: 5.57
+    y: -1.66
+  - TimePoint: 50.52
+    x: 7.21
+    y: -2.22
+  - TimePoint: 50.75
+    x: -8
+    y: -3.56
+  - TimePoint: 51.6
+    x: -8
+    y: 3.14
+  - TimePoint: 51.9
+    x: -8
+    y: 1.1
+  - TimePoint: 52.35
+    x: -8
+    y: -0.88
+  - TimePoint: 52.85
+    x: -8
+    y: -2.08
+  - TimePoint: 53.3
+    x: 5.69
+    y: 1.65
+  - TimePoint: 53.4
+    x: 5.8
+    y: 0.09
+  - TimePoint: 53.75
+    x: 5.76
+    y: -1.29
+  - TimePoint: 54.3
+    x: -8
+    y: 2.42
+  - TimePoint: 54.7
+    x: -6.89
+    y: 2.42
+  - TimePoint: 55.6
+    x: -8
+    y: 2.01
+  - TimePoint: 56.05
+    x: -7.13
+    y: 0.02
+  - TimePoint: 56.95
+    x: -8
+    y: -1.63
+  - TimePoint: 57.85
+    x: 7.82
+    y: 1.6
+  - TimePoint: 58.3
+    x: 6.41
+    y: -0.12
+  - TimePoint: 58.8
+    x: 7.96
+    y: -1.84
+  - TimePoint: 59.7
+    x: -8
+    y: 2.08
+  - TimePoint: 59.75
+    x: -7.26
+    y: 0.99
+  - TimePoint: 59.8
+    x: -8
+    y: -0.92
+  - TimePoint: 60.3
+    x: 7.96
+    y: 1.35
+  - TimePoint: 60.5
+    x: 6.01
+    y: -1.7
+  - TimePoint: 61.25
+    x: 7.51
+    y: 1.91
+  - TimePoint: 61.56
+    x: 6.19
+    y: 0.37
+  - TimePoint: 61.8
+    x: 7.88
+    y: -0.92
+  - TimePoint: 62.05
+    x: -8
+    y: -0.2
+  - TimePoint: 62.3
+    x: -7.14
+    y: -1.64
+  - TimePoint: 62.8
+    x: 5.64
+    y: 2.52
+  - TimePoint: 63
+    x: 5.67
+    y: 1.05
+  - TimePoint: 63.3
+    x: 7.53
+    y: 0.54
+  - TimePoint: 63.55
+    x: 5.76
+    y: -0.6
+  - TimePoint: 63.7
+    x: 7.71
+    y: -1.44
+  - TimePoint: 64
+    x: 6.03
+    y: 1.28
+  - TimePoint: 64.2
+    x: 7.44
+    y: -0.84
+  - TimePoint: 65
+    x: -7.52
+    y: 0.96
+  - TimePoint: 65.8
+    x: 6.12
+    y: 0.36
+  - TimePoint: 66.05
+    x: 7.44
+    y: -1.23
+  - TimePoint: 67.2
+    x: 6.57
+    y: 1.28
+  - TimePoint: 67.65
+    x: -7.02
+    y: 1.19
+  - TimePoint: 67.9
+    x: -8
+    y: -0.61
+  - TimePoint: 68.6
+    x: 6.65
+    y: 1.16
+  - TimePoint: 69.3
+    x: -8
+    y: 2.48
+  - TimePoint: 69.5
+    x: -8
+    y: 0.53
+  - TimePoint: 69.8
+    x: -8
+    y: -1.53
+  - TimePoint: 71
+    x: 6.26
+    y: 1.46
+  - TimePoint: 72.3
+    x: 5.99
+    y: -0.99
+  - TimePoint: 72.5
+    x: 7.76
+    y: -1.92
+  - TimePoint: 74.6
+    x: 5.37
+    y: 2.3
+  - TimePoint: 75.3
+    x: 6.75
+    y: 0.03
+  - TimePoint: 76
+    x: 5.55
+    y: -1.86
+  - TimePoint: 78
+    x: -6.93
+    y: 0.18
+  - TimePoint: 79.8
+    x: 7.76
+    y: -1.92
+  - TimePoint: 81.5
+    x: -8
+    y: -2.29
+  - TimePoint: 83.3
+    x: 5.67
+    y: 2.32
+  - TimePoint: 83.6
+    x: 7.7
+    y: 1.24
+  - TimePoint: 83.8
+    x: 7.88
+    y: -1.28
+  - TimePoint: 84.05
+    x: 5.79
+    y: -2.33
+  - TimePoint: 85.2
+    x: -8
+    y: 2.34
+  - TimePoint: 85.45
+    x: -8
+    y: 0.07
+  - TimePoint: 85.7
+    x: -8
+    y: -2.08
+  - TimePoint: 86.6
+    x: 7.02
+    y: 1.69
+  - TimePoint: 86.8
+    x: 6.96
+    y: 0.01
+  - TimePoint: 87.05
+    x: 6.93
+    y: -2.17
+  - TimePoint: 89
+    x: -7.85
+    y: -0.28
+  - TimePoint: 89.4
+    x: 6.45
+    y: -0.37
+  - TimePoint: 90.3
+    x: -6.9
+    y: 1.22
+  - TimePoint: 90.5
+    x: -8
+    y: -0.19
+  - TimePoint: 90.8
+    x: -6.99
+    y: -2.19
+  - TimePoint: 94
+    x: 6.21
+    y: 1.55
+  - TimePoint: 94.25
+    x: 7.56
+    y: -0.16
+  - TimePoint: 94.5
+    x: 5.73
+    y: -1.96
+  - TimePoint: 97.7
+    x: -6.39
+    y: -2.39
+  - TimePoint: 98
+    x: -8
+    y: -0.41
+  - TimePoint: 98.2
+    x: -6.51
+    y: 1.83
+  - TimePoint: 100.5
+    x: 6.96
+    y: 1.65
+  - TimePoint: 101.8
+    x: 6.93
+    y: -1.94
+  - TimePoint: 112.5
+    x: 6.27
+    y: 1.68
+  - TimePoint: 113.4
+    x: -7.7
+    y: 1.5
+  - TimePoint: 113.6
+    x: -7.76
+    y: -1.55
+  - TimePoint: 114.2
+    x: -7.91
+    y: 2.52
+  - TimePoint: 115.05
+    x: 7.17
+    y: 1.77
+  - TimePoint: 115.3
+    x: 7.08
+    y: -1.61
+  - TimePoint: 116
+    x: 6.9
+    y: 1.77
+  - TimePoint: 116.8
+    x: 5.64
+    y: -1.82
+  - TimePoint: 117
+    x: 8
+    y: -2.09
+  - TimePoint: 117.7
+    x: -8
+    y: 2.1
+  - TimePoint: 118.55
+    x: -5.64
+    y: -1.82
+  - TimePoint: 118.75
+    x: -8
+    y: -2.09
+  - TimePoint: 119.4
+    x: -6.5
+    y: 1.59
+  - TimePoint: 120.25
+    x: -7.32
+    y: -0.27
+  - TimePoint: 120.45
+    x: -6.01
+    y: -2.47
+  - TimePoint: 121.1
+    x: 5.5
     y: 2.5
-  - TimePoint: 4
-    x: -4
-    y: -4
-  MaxTime: 13
+  - TimePoint: 122
+    x: 7
+    y: 0
+  - TimePoint: 122.2
+    x: 5.5
+    y: -2.5
+  - TimePoint: 122.9
+    x: 5.5
+    y: 0
+  - TimePoint: 123.8
+    x: 7
+    y: 0
+  - TimePoint: 124.6
+    x: -5.5
+    y: 2.5
+  - TimePoint: 125.45
+    x: -7
+    y: 0
+  - TimePoint: 125.65
+    x: -5.5
+    y: -2.5
+  - TimePoint: 126.3
+    x: 5.5
+    y: 0
+  - TimePoint: 127.2
+    x: 5.5
+    y: 2.5
+  - TimePoint: 127.4
+    x: 7
+    y: 0
+  - TimePoint: 127.6
+    x: 5.5
+    y: -2.5
+  - TimePoint: 128
+    x: -3.8
+    y: 3.5
+  - TimePoint: 129
+    x: -5.5
+    y: 2.5
+  - TimePoint: 129.75
+    x: -5.5
+    y: -2.5
+  - TimePoint: 131.5
+    x: -3.8
+    y: -3.5
+  - TimePoint: 133.2
+    x: 5.5
+    y: 2.5
+  - TimePoint: 134.1
+    x: 7
+    y: 0
+  - TimePoint: 135
+    x: 5.5
+    y: -2.5
+  - TimePoint: 136
+    x: 5.5
+    y: 0
+  - TimePoint: 137
+    x: -5.5
+    y: 2.5
+  - TimePoint: 138
+    x: -7
+    y: 0
+  - TimePoint: 139
+    x: -5.5
+    y: -2.5
+  - TimePoint: 140
+    x: -5.5
+    y: 0
+  - TimePoint: 141
+    x: 3.8
+    y: 3.5
+  - TimePoint: 142.5
+    x: 5.5
+    y: 2.5
+  - TimePoint: 143.2
+    x: 7
+    y: 0
+  - TimePoint: 144.4
+    x: 5.5
+    y: -2.5
+  - TimePoint: 145.6
+    x: 3.8
+    y: -3.5
+  - TimePoint: 146.4
+    x: 5.5
+    y: 0
+  - TimePoint: 148.7
+    x: -3.5
+    y: 3.5
+  - TimePoint: 149.5
+    x: -5.5
+    y: 2.5
+  - TimePoint: 151.45
+    x: -5.5
+    y: -2.5
+  - TimePoint: 151.85
+    x: -3.8
+    y: -3.5
+  - TimePoint: 152.65
+    x: 5.5
+    y: 2.5
+  - TimePoint: 153.15
+    x: 5.5
+    y: 0
+  - TimePoint: 153.5
+    x: 7
+    y: 0
+  - TimePoint: 155.1
+    x: -5.5
+    y: 2.5
+  - TimePoint: 156
+    x: -7
+    y: 0
+  - TimePoint: 157.1
+    x: -5.5
+    y: 0
+  - TimePoint: 159.1
+    x: 3.8
+    y: 3.5
+  - TimePoint: 160.3
+    x: 3.8
+    y: -3.5
+  - TimePoint: 162.2
+    x: 5.5
+    y: 0
+  - TimePoint: 163.8
+    x: 7
+    y: 0
+  - TimePoint: 165.36
+    x: -3.8
+    y: 3.5
+  - TimePoint: 167.75
+    x: -3.8
+    y: -3.5
+  - TimePoint: 168.7
+    x: -5.5
+    y: 0
+  - TimePoint: 168.9
+    x: -7
+    y: 0
+  - TimePoint: 169.25
+    x: 5.5
+    y: 2.5
+  - TimePoint: 170.2
+    x: 7
+    y: 0
+  - TimePoint: 170.65
+    x: 5.5
+    y: -2.5
+  - TimePoint: 171.1
+    x: 3.8
+    y: 3.5
+  - TimePoint: 171.4
+    x: 5.5
+    y: 2.5
+  - TimePoint: 171.9
+    x: 7
+    y: 0
+  - TimePoint: 172.95
+    x: -3.8
+    y: 3.5
+  - TimePoint: 173.15
+    x: -5.5
+    y: 2.5
+  - TimePoint: 173.35
+    x: -7
+    y: 0
+  - TimePoint: 173.75
+    x: 5.5
+    y: 2.5
+  - TimePoint: 174.05
+    x: 5.5
+    y: 0
+  - TimePoint: 174.25
+    x: 5.5
+    y: -2.5
+  - TimePoint: 174.6
+    x: 5.5
+    y: 0
+  - TimePoint: 174.75
+    x: 7
+    y: 0
+  - TimePoint: 175.85
+    x: -3.8
+    y: -3.5
+  - TimePoint: 176.2
+    x: -5.5
+    y: -2.5
+  - TimePoint: 176.4
+    x: -7
+    y: 0
+  - TimePoint: 176.8
+    x: 3.8
+    y: -3.5
+  - TimePoint: 177.25
+    x: 5.5
+    y: -2.5
+  - TimePoint: 177.6
+    x: 7
+    y: 0
+  - TimePoint: 177.8
+    x: 5.5
+    y: 0
+  - TimePoint: 178.1
+    x: 3.8
+    y: 3.5
+  - TimePoint: 178.65
+    x: 5.5
+    y: 2.5
+  - TimePoint: 179.2
+    x: 7
+    y: 0
+  - TimePoint: 179.8
+    x: 5.5
+    y: -2.5
+  - TimePoint: 180.1
+    x: 3.8
+    y: -3.5
+  - TimePoint: 180.5
+    x: 5
+    y: 0
+  MaxTime: 195

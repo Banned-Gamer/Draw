@@ -152,7 +152,7 @@ public class TestDraw : MonoBehaviour
                 }
             } //²»ÔÚdrawArea
 
-            if (Input.GetAxisRaw("Submit") != 0)
+            if (Input.GetAxisRaw("Cancel") != 0)
             {
                 ClearAttackDraw();
             }

@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayMusic : MonoBehaviour
 {
-    [Header("Show Text")]
-    public Text ScoreText;
+    [Header("Show Text")] public Text ScoreText;
     [Header("Animators")] public Animator ComboAnimator;
     public Animator MissAnimator;
     [Header("Data and Scripts")] public MusicSo MusicData;
@@ -17,6 +17,7 @@ public class PlayMusic : MonoBehaviour
     [Header("Time")] public float MoveTime;
     public float GoodTime;
     public float DefenceDelayTime;
+    [Header("Number")] public int CurrentDefenceIndex;
 
     [SerializeField, Header("Object father")]
     private Transform _attackCircleParent;
@@ -44,7 +45,6 @@ public class PlayMusic : MonoBehaviour
     private int _attackPointNumb;
     private int _defencePointNumb;
     private int _currentAttackIndex;
-    private int _currentDefenceIndex;
     private int _currentAttackUsableIndex;
     private int _currentDefenceUsableIndex;
     private int _gameScore;
@@ -99,15 +99,15 @@ public class PlayMusic : MonoBehaviour
                 } //到达攻击note的结束时间
             }
 
-            if (_currentDefenceIndex < _defencePointNumb)
+            if (CurrentDefenceIndex < _defencePointNumb)
             {
-                if (_sumTime > _defenceEndTimes[_currentDefenceIndex])
+                if (_sumTime > _defenceEndTimes[CurrentDefenceIndex])
                 {
                     EndDefence();
                     MissAnimator.SetBool("IsAcitivity", true);
                     StartCoroutine(waitor2());
 
-                    _currentDefenceIndex++;
+                    CurrentDefenceIndex++;
                 } //到达防御note的结束时间
             }
 
@@ -201,7 +201,7 @@ public class PlayMusic : MonoBehaviour
             _currentAttackIndex = 0;
             _currentAttackUsableIndex = 0;
 
-            _currentDefenceIndex = 0;
+            CurrentDefenceIndex = 0;
             _currentDefenceUsableIndex = 0;
             _targetTime = MusicData.MaxTime;
         } //时间和index归零
@@ -267,7 +267,8 @@ public class PlayMusic : MonoBehaviour
             nowObject = _defenceNotes[0];
             _defenceNotes.RemoveAt(0);
             _onUsedDefenceNotes.Add(nowObject);
-            nowObject.BeginDefenceNote(MusicData.DefencePoints[_currentDefenceUsableIndex]);
+            int x = _currentDefenceUsableIndex;
+            nowObject.BeginDefenceNote(MusicData.DefencePoints[_currentDefenceUsableIndex], x);
         }
     } //开始放置防御note
 
@@ -294,10 +295,10 @@ public class PlayMusic : MonoBehaviour
 
     public void Defence()
     {
-        if (_currentDefenceIndex < _defencePointNumb)
+        if (CurrentDefenceIndex < _defencePointNumb)
         {
-            if (_sumTime >= _defenceBeginTimes[_currentDefenceIndex] &&
-                _sumTime <= _defenceEndTimes[_currentDefenceIndex])
+            if (_sumTime >= _defenceBeginTimes[CurrentDefenceIndex] &&
+                _sumTime <= _defenceEndTimes[CurrentDefenceIndex])
             {
                 if (_onUsedDefenceNotes.Count > 0)
                 {
@@ -305,7 +306,7 @@ public class PlayMusic : MonoBehaviour
                     nowObject = _onUsedDefenceNotes[0];
                     _defenceNotes.Add(nowObject);
                     _onUsedDefenceNotes.RemoveAt(0);
-                    _currentDefenceIndex++;
+                    CurrentDefenceIndex++;
 
                     _gameScore += 10;
                     ScoreText.text = _gameScore.ToString();

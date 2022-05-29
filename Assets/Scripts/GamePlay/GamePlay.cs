@@ -37,43 +37,49 @@ public class GamePlay : MonoBehaviour
                 case 0:
                     TextAnimator.SetBool("isend", true);
                     TextAnimator.SetBool("isbegin", false);
-                    StartCoroutine(waiter1("也是一个和武侠相关的\n游戏"));
+                    StartCoroutine(waiter1("你，是一位浪荡江湖的\n侠客"));
                     step++;
                     break;
                 case 1:
                     TextAnimator.SetBool("isend", true);
                     TextAnimator.SetBool("isbegin", false);
-                    StartCoroutine(waiter1("在白色圈圈内画线进行\n“攻击”"));
+                    StartCoroutine(waiter1("在白色圈圈内通过画线\n你可以“攻击”别人"));
                     step++;
                     break;
                 case 2:
                     TextAnimator.SetBool("isend", true);
                     TextAnimator.SetBool("isbegin", false);
-                    StartCoroutine(waiter4("在白色圈圈外，有时会出现\n“敌人”\n就是那些红色的饼"));
+                    StartCoroutine(waiter5("这里有个红色的圈圈\n当它收缩到白圈大小的时候\n就是你攻击的时机"));
                     step++;
                     break;
                 case 3:
                     TextAnimator.SetBool("isend", true);
                     TextAnimator.SetBool("isbegin", false);
-                    StartCoroutine(waiter3("像切水果一样切掉他们，\n防止他们对你造成伤害"));
+                    StartCoroutine(waiter1("你攻击的每个痕迹都会留下\n当痕迹组成“仁”字的时候\n会对敌人造成大量伤害"));
                     step++;
                     break;
                 case 4:
                     TextAnimator.SetBool("isend", true);
                     TextAnimator.SetBool("isbegin", false);
-                    StartCoroutine(waiter5("当攻击的时刻来临的时候\n会有红色的圈圈不断变小"));
+                    StartCoroutine(waiter1("同时，你可以按下E键\n会擦除屏幕上的所有痕迹"));
                     step++;
                     break;
                 case 5:
                     TextAnimator.SetBool("isend", true);
                     TextAnimator.SetBool("isbegin", false);
-                    StartCoroutine(waiter1("当你“攻击”的线条形成汉字\n“仁”的时候\n造成的伤害会显著提高"));
+                    StartCoroutine(waiter4("在白色圈圈外，有时会出现\n红色的敌人"));
                     step++;
                     break;
                 case 6:
                     TextAnimator.SetBool("isend", true);
                     TextAnimator.SetBool("isbegin", false);
-                    StartCoroutine(waiter1("不如来试试看吧！"));
+                    StartCoroutine(waiter3("用你的刀斩向他们，\n防止他们对你造成伤害"));
+                    step++;
+                    break;
+                case 7:
+                    TextAnimator.SetBool("isend", true);
+                    TextAnimator.SetBool("isbegin", false);
+                    StartCoroutine(waiter1("说多了容易使人烦躁\n不如来试试看吧！"));
                     step++;
                     StartCoroutine(waiter2());
                     break;
@@ -84,6 +90,9 @@ public class GamePlay : MonoBehaviour
     public void end()
     {
         Draw.IsDraw = false;
+        Play.SetActive(true);
+        StartCoroutine(waiter1("Success!"));
+
         Draw.ClearAttackDraw();
         VideoPlay.SetActive(true);
         StartCoroutine(waiterFinal());
@@ -93,7 +102,7 @@ public class GamePlay : MonoBehaviour
     {
         Draw.IsDraw = false;
         Draw.ClearAttackDraw();
-        DeadAnimator.SetBool("IsDead",true);
+        DeadAnimator.SetBool("IsDead", true);
     }
 
     public void SwitchToBegin()
@@ -161,10 +170,10 @@ public class GamePlay : MonoBehaviour
 
     IEnumerator waiterFinal()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(5);
         MyPlayer.Play();
 
-        yield return new WaitForSeconds(105);
+        yield return new WaitForSeconds(108);
         SwitchToBegin();
     }
 }

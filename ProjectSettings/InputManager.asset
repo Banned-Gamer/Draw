@@ -57,7 +57,7 @@ InputManager:
     m_Name: Cancel
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: k
+    negativeButton: e
     positiveButton: 
     altNegativeButton: 
     altPositiveButton: 

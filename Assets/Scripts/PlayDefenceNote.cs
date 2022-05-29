@@ -10,6 +10,7 @@ public class PlayDefenceNote : MonoBehaviour
 
     private Animator _animator;
     private bool _isShow;
+    private int _currentNumb;
 
     private const string _Isbegin = "IsBegin";
     private const string _IsEnd = "IsEnd";
@@ -21,8 +22,9 @@ public class PlayDefenceNote : MonoBehaviour
         _isShow = false;
     }
 
-    public void BeginDefenceNote(MusicSo.DefencePoint targetDefencePoint)
+    public void BeginDefenceNote(MusicSo.DefencePoint targetDefencePoint, int numb)
     {
+        _currentNumb = numb;
         _myDefencePoint = targetDefencePoint;
 
         _isShow = true;
@@ -47,13 +49,14 @@ public class PlayDefenceNote : MonoBehaviour
     {
         if (_isShow)
         {
-            if (collision.tag == "Blade")
-            {
-                _animator.SetBool(_Isbegin, false);
-                _animator.SetBool(_IsAttack, true);
+            if (_currentNumb == MyPlayMusic.CurrentDefenceIndex)
+                if (collision.tag == "Blade")
+                {
+                    _animator.SetBool(_Isbegin, false);
+                    _animator.SetBool(_IsAttack, true);
 
-                MyPlayMusic.Defence();
-            }
+                    MyPlayMusic.Defence();
+                }
         }
     }
 }

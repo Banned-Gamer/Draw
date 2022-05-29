@@ -183,7 +183,11 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.94
+<<<<<<< Updated upstream
+  m_Radius: 1.48
+=======
+  m_Radius: 1.18
+>>>>>>> Stashed changes
 --- !u!114 &7103403266193621906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,9 +197,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7103403266193621917}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1981cb23cc4a8f34a8f444cb479fd3ca, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d8295966f03fe642bbf81e4c62a53ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MyPlayMusic: {fileID: 0}
 --- !u!95 &3757989137374999666
 Animator:
   serializedVersion: 3

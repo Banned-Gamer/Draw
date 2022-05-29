@@ -159,7 +159,7 @@ public class TestDraw : MonoBehaviour
         }
     }
 
-    void ClearAttackDraw()
+    public void ClearAttackDraw()
     {
         _strokeId = -1;
 

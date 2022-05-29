@@ -11,6 +11,7 @@ public class PlayMusic : MonoBehaviour
     public Animator ComboAnimator;
     public Animator MissAnimator;
     public MusicSo MusicData;
+    public GamePlay MyGame;
     public float MoveTime;
     public float GoodTime;
 
@@ -109,6 +110,7 @@ public class PlayMusic : MonoBehaviour
             {
                 _isPlay = false;
                 _audioSource.Stop();
+                MyGame.end();
             } //超界，停止音乐和计时
         }
     }

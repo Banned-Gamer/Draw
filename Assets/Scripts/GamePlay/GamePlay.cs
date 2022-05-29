@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class GamePlay : MonoBehaviour
 {
     public PlayMusic MyPlayMusic;
+    public VideoPlayer MyPlayer;
     public TestDraw Draw;
     public GameObject Play;
+    public GameObject VideoPlay;
     public Text PlayText;
     public Animator TextAnimator;
     public Animator DefenceAnimator;
@@ -76,6 +79,14 @@ public class GamePlay : MonoBehaviour
         }
     }
 
+    public void end()
+    {
+        Draw.IsDraw = false;
+        Draw.ClearAttackDraw();
+        VideoPlay.SetActive(true);
+        StartCoroutine(waiterFinal());
+    }
+
     IEnumerator waiter1(string textMessage)
     {
         yield return new WaitForSeconds(2);
@@ -84,7 +95,6 @@ public class GamePlay : MonoBehaviour
         TextAnimator.SetBool("isbegin", true);
         isDown = false;
     }
-
     IEnumerator waiter2()
     {
         yield return new WaitForSeconds(3);
@@ -96,7 +106,6 @@ public class GamePlay : MonoBehaviour
         Draw.IsDraw = true;
         Play.SetActive(false);
     }
-
     IEnumerator waiter3(string textMessage)
     {
         yield return new WaitForSeconds(2);
@@ -117,7 +126,6 @@ public class GamePlay : MonoBehaviour
         TextAnimator.SetBool("isbegin", true);
         isDown = false;
     }
-
     IEnumerator waiter5(string textMessage)
     {
         yield return new WaitForSeconds(2);
@@ -131,5 +139,11 @@ public class GamePlay : MonoBehaviour
         AttackAnimator.SetBool("isAttack", false);
 
         isDown = false;
+    }
+
+    IEnumerator waiterFinal()
+    {
+        yield return new WaitForSeconds(2);
+        MyPlayer.Play();
     }
 }

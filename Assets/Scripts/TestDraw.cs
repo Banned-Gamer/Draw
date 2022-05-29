@@ -205,12 +205,12 @@ public class TestDraw : MonoBehaviour
             int result = RecognizeGesture();
             if (result == 1)
             {
-                _musicMgr.AttackNote(3);
+                _musicMgr.AttackNote(1000);
                 ClearAttackDraw();
             }
             else
             {
-                _musicMgr.AttackNote(1);
+                _musicMgr.AttackNote(200);
             }
         }
     }

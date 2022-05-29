@@ -306,6 +306,9 @@ public class PlayMusic : MonoBehaviour
                     _defenceNotes.Add(nowObject);
                     _onUsedDefenceNotes.RemoveAt(0);
                     _currentDefenceIndex++;
+
+                    _gameScore += 10;
+                    ScoreText.text = _gameScore.ToString();
                     ComboAnimator.SetBool("IsAcitivity", true);
                     StartCoroutine(waitor());
                 }

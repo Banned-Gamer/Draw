@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using UnityEngine.SceneManagement;
 
 public class GamePlay : MonoBehaviour
 {
-    public PlayMusic MyPlayMusic;
+    [Header("Player")] public PlayMusic MyPlayMusic;
     public VideoPlayer MyPlayer;
-    public TestDraw Draw;
+    [Header("Scripts and Objects")] public TestDraw Draw;
     public GameObject Play;
     public GameObject VideoPlay;
     public Text PlayText;
-    public Animator TextAnimator;
+    [Header("Animator")] public Animator TextAnimator;
     public Animator DefenceAnimator;
     public Animator AttackAnimator;
+    public Animator DeadAnimator;
 
     private int step = 0;
     private bool isDown;
@@ -87,6 +89,18 @@ public class GamePlay : MonoBehaviour
         StartCoroutine(waiterFinal());
     }
 
+    public void Dead()
+    {
+        Draw.IsDraw = false;
+        Draw.ClearAttackDraw();
+        DeadAnimator.SetBool("IsDead",true);
+    }
+
+    public void SwitchToBegin()
+    {
+        SceneManager.LoadScene("BeginScene");
+    }
+
     IEnumerator waiter1(string textMessage)
     {
         yield return new WaitForSeconds(2);
@@ -95,6 +109,7 @@ public class GamePlay : MonoBehaviour
         TextAnimator.SetBool("isbegin", true);
         isDown = false;
     }
+
     IEnumerator waiter2()
     {
         yield return new WaitForSeconds(3);
@@ -106,6 +121,7 @@ public class GamePlay : MonoBehaviour
         Draw.IsDraw = true;
         Play.SetActive(false);
     }
+
     IEnumerator waiter3(string textMessage)
     {
         yield return new WaitForSeconds(2);
@@ -116,6 +132,7 @@ public class GamePlay : MonoBehaviour
         TextAnimator.SetBool("isbegin", true);
         isDown = false;
     }
+
     IEnumerator waiter4(string textMessage)
     {
         yield return new WaitForSeconds(0.5f);
@@ -126,6 +143,7 @@ public class GamePlay : MonoBehaviour
         TextAnimator.SetBool("isbegin", true);
         isDown = false;
     }
+
     IEnumerator waiter5(string textMessage)
     {
         yield return new WaitForSeconds(2);
@@ -145,5 +163,8 @@ public class GamePlay : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
         MyPlayer.Play();
+
+        yield return new WaitForSeconds(105);
+        SwitchToBegin();
     }
 }

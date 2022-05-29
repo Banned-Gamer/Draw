@@ -6,18 +6,22 @@ using UnityEngine.UI;
 
 public class PlayMusic : MonoBehaviour
 {
-    public Text HealthText;
+    [Header("Show Text")]
     public Text ScoreText;
-    public Animator ComboAnimator;
+    [Header("Animators")] public Animator ComboAnimator;
     public Animator MissAnimator;
-    public MusicSo MusicData;
+    [Header("Data and Scripts")] public MusicSo MusicData;
     public GamePlay MyGame;
-    public float MoveTime;
-    public float GoodTime;
 
-    [SerializeField] private Transform _attackCircleParent;
+    public Image HurtImage;
+    [Header("Time")] public float MoveTime;
+    public float GoodTime;
+    public float DefenceDelayTime;
+
+    [SerializeField, Header("Object father")]
+    private Transform _attackCircleParent;
+
     [SerializeField] private Transform _defenceParent;
-    [SerializeField] private float _defenceDelay;
 
     private List<PlayNote> _attackCircles = new List<PlayNote>();
     private List<PlayNote> _onUsedAttackCircles = new List<PlayNote>();
@@ -44,7 +48,7 @@ public class PlayMusic : MonoBehaviour
     private int _currentAttackUsableIndex;
     private int _currentDefenceUsableIndex;
     private int _gameScore;
-    private int _gameHealth;
+    private float _gameHealth;
     private float _sumTime;
     private float _targetTime;
     private bool _isPlay = false;
@@ -54,6 +58,7 @@ public class PlayMusic : MonoBehaviour
         _isPlay = false;
         _audioSource = GetComponent<AudioSource>();
         _audioSource.clip = MusicData.MyAudio;
+        HurtImage.color = new Color(255, 255, 255, 0);
     }
 
     void Update()
@@ -87,7 +92,6 @@ public class PlayMusic : MonoBehaviour
             {
                 if (_sumTime > _attackEndTimes[_currentAttackIndex])
                 {
-                    Debug.Log("attack over time");
                     MissAnimator.SetBool("IsAcitivity", true);
                     StartCoroutine(waitor2());
                     EndAttack();
@@ -100,6 +104,8 @@ public class PlayMusic : MonoBehaviour
                 if (_sumTime > _defenceEndTimes[_currentDefenceIndex])
                 {
                     EndDefence();
+                    MissAnimator.SetBool("IsAcitivity", true);
+                    StartCoroutine(waitor2());
 
                     _currentDefenceIndex++;
                 } //到达防御note的结束时间
@@ -178,7 +184,7 @@ public class PlayMusic : MonoBehaviour
 
             for (_i = 0; _i < _defencePointNumb; _i++)
             {
-                _defenceBeginNoteTimes.Add(defencePoints[_i].TimePoint - GoodTime / 1000 - _defenceDelay);
+                _defenceBeginNoteTimes.Add(defencePoints[_i].TimePoint - GoodTime / 1000 - DefenceDelayTime);
                 _defenceBeginTimes.Add(defencePoints[_i].TimePoint - GoodTime / 1000 + MoveTime);
                 _defenceEndTimes.Add(defencePoints[_i].TimePoint + GoodTime / 1000 + MoveTime);
             }
@@ -188,7 +194,6 @@ public class PlayMusic : MonoBehaviour
             _gameHealth = 100;
             _gameScore = 0;
             ScoreText.text = _gameScore.ToString();
-            HealthText.text = _gameHealth.ToString();
         }
 
         {
@@ -202,7 +207,6 @@ public class PlayMusic : MonoBehaviour
         } //时间和index归零
 
         _isPlay = true;
-
 
         _audioSource.PlayDelayed(MoveTime);
     }
@@ -246,7 +250,7 @@ public class PlayMusic : MonoBehaviour
                     _gameScore += Score;
                     ScoreText.text = _gameScore.ToString();
                 }
-                ComboAnimator.SetBool("IsAcitivity",true);
+                ComboAnimator.SetBool("IsAcitivity", true);
                 StartCoroutine(waitor());
                 EndAttack();
                 _currentAttackIndex++;
@@ -276,8 +280,15 @@ public class PlayMusic : MonoBehaviour
             _defenceNotes.Add(nowObject);
             _onUsedDefenceNotes.RemoveAt(0);
             nowObject.EndDefenceNote();
-            _gameHealth -= 10;
-            HealthText.text = _gameHealth.ToString();
+            _gameHealth -= 2.5f;
+            HurtImage.color = new Color(255, 255, 255, (100 - _gameHealth) / 100);
+
+            if (_gameHealth <= 0)
+            {
+                _isPlay = false;
+                _audioSource.Stop();
+                MyGame.Dead();
+            }
         }
     } //超时，结束防御note
 
@@ -295,7 +306,8 @@ public class PlayMusic : MonoBehaviour
                     _defenceNotes.Add(nowObject);
                     _onUsedDefenceNotes.RemoveAt(0);
                     _currentDefenceIndex++;
-                    HealthText.text = _gameHealth.ToString();
+                    ComboAnimator.SetBool("IsAcitivity", true);
+                    StartCoroutine(waitor());
                 }
             }
         }

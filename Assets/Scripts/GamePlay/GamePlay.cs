@@ -17,6 +17,7 @@ public class GamePlay : MonoBehaviour
     public Animator DefenceAnimator;
     public Animator AttackAnimator;
     public Animator DeadAnimator;
+    public Animator EndAnimator;
 
     private int step = 0;
     private bool isDown;
@@ -90,8 +91,9 @@ public class GamePlay : MonoBehaviour
     public void end()
     {
         Draw.IsDraw = false;
-        Play.SetActive(true);
-        StartCoroutine(waiter1("Success!"));
+        EndAnimator.gameObject.SetActive(true);
+        EndAnimator.SetBool("isend", false);
+        EndAnimator.SetBool("isbegin", true);
 
         Draw.ClearAttackDraw();
         VideoPlay.SetActive(true);
@@ -170,7 +172,11 @@ public class GamePlay : MonoBehaviour
 
     IEnumerator waiterFinal()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(3);
+        EndAnimator.SetBool("isend", true);
+        EndAnimator.SetBool("isbegin", false);
+        yield return new WaitForSeconds(2);
+        EndAnimator.gameObject.SetActive(false);
         MyPlayer.Play();
 
         yield return new WaitForSeconds(108);

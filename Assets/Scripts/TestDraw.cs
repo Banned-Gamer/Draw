@@ -33,6 +33,7 @@ public class TestDraw : MonoBehaviour
     private int _strokeId = -1;
     public bool IsDraw = false;
     private int _currentAttackArea = -1;
+    private float _liveTime;
 
     void Start()
     {
@@ -60,6 +61,7 @@ public class TestDraw : MonoBehaviour
                 {
                     _currentAttackArea = 0;
                     ++_strokeId;
+                    _liveTime = 0;
 
                     {
                         Transform tmpGesture =
@@ -75,6 +77,8 @@ public class TestDraw : MonoBehaviour
 
                 if (Input.GetMouseButton(0))
                 {
+                    _liveTime += Time.deltaTime;
+
                     switch (_currentAttackArea)
                     {
                         case 0:
@@ -95,6 +99,12 @@ public class TestDraw : MonoBehaviour
                         default:
                             break;
                     }
+
+                    if (_liveTime >= 0.5f)
+                    {
+                        _currentAttackArea = -1;
+                        OnAttackMouseUp();
+                    }
                 } //¶¯±Ê
 
                 if (Input.GetMouseButtonUp(0))
@@ -109,7 +119,7 @@ public class TestDraw : MonoBehaviour
                 {
                     _currentAttackArea = 1;
                     ++_strokeId;
-
+                    _liveTime = 0;
                     {
                         Transform tmpGesture =
                             Instantiate(GesturePrefabTransform, transform.position, transform.rotation,
@@ -124,6 +134,8 @@ public class TestDraw : MonoBehaviour
 
                 if (Input.GetMouseButton(0))
                 {
+                    _liveTime += Time.deltaTime;
+
                     switch (_currentAttackArea)
                     {
                         case 1:
@@ -143,6 +155,12 @@ public class TestDraw : MonoBehaviour
                         }
                         default:
                             break;
+                    }
+
+                    if (_liveTime >= 0.5f)
+                    {
+                        OnDefenseMouseUp();
+                        _currentAttackArea = -1;
                     }
                 }
 

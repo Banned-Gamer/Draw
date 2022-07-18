@@ -9,9 +9,9 @@ public class GamePlay : MonoBehaviour
 {
     [Header("Player")] public PlayMusic MyPlayMusic;
     public VideoPlayer MyPlayer;
+    public GameObject BackToEndButtonGameObject;
     [Header("Scripts and Objects")] public TestDraw Draw;
     public GameObject Play;
-    public GameObject VideoPlay;
     public Text PlayText;
     [Header("Animator")] public Animator TextAnimator;
     public Animator DefenceAnimator;
@@ -95,9 +95,10 @@ public class GamePlay : MonoBehaviour
         EndAnimator.SetBool("isend", false);
         EndAnimator.SetBool("isbegin", true);
 
+        StartCoroutine(waiter1("¹§Ï²Í¨¹Ø£¡"));
+
         Draw.ClearAttackDraw();
-        VideoPlay.SetActive(true);
-        StartCoroutine(waiterFinal());
+        BackToEndButtonGameObject.SetActive(true);
     }
 
     public void Dead()

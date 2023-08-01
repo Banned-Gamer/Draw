@@ -1,179 +1,175 @@
-using System.IO;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using PDollarGestureRecognizer;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
 
 
 public class TestDraw : MonoBehaviour
 {
-    //ÏßÌõµÄParent£¬ÓÃÀ´¹ÒÔØÏßÌõ
+    //çº¿æ¡çš„Parentï¼Œç”¨æ¥æŒ‚è½½çº¿æ¡
     [SerializeField] private Transform _attackTransform;
     [SerializeField] private Transform _defenceTransform;
     [SerializeField] private PlayMusic _musicMgr;
 
-    //ÏßÌõPrefab£¬ÑµÁ·µÄµã¼¯£¬µ±Ç°»­²¼ÉÏµÄËùÓĞµã
-    public Transform GesturePrefabTransform;
-    private List<Gesture> _trainSet = new List<Gesture>();
-    private List<Point> _attackPoints = new List<Point>();
-    private List<Point> _defencePoints = new List<Point>();
+    //çº¿æ¡Prefabï¼Œè®­ç»ƒçš„ç‚¹é›†ï¼Œå½“å‰ç”»å¸ƒä¸Šçš„æ‰€æœ‰ç‚¹
+    public           Transform     GesturePrefabTransform;
+    private readonly List<Gesture> _trainSet      = new List<Gesture>();
+    private readonly List<Point>   _attackPoints  = new List<Point>();
+    private readonly List<Point>   _defencePoints = new List<Point>();
 
-    //Êó±êµã»÷Î»ÖÃ£¬»æ»­Çø¼ä
+    //é¼ æ ‡ç‚¹å‡»ä½ç½®ï¼Œç»˜ç”»åŒºé—´
     private Vector3 _virtualKeyPosition = Vector2.zero;
-    private Rect _drawArea;
+    private Rect    _drawArea;
 
-    //ÏßÌõ¼¯ºÏ£¬µ±Ç°µÄÏßÌõ
-    private List<LineRenderer> _attackLineRenderers = new List<LineRenderer>();
-    private List<LineRenderer> _defenceLineRenderers = new List<LineRenderer>();
-    private LineRenderer _curretnLineRenderer;
+    //çº¿æ¡é›†åˆï¼Œå½“å‰çš„çº¿æ¡
+    private readonly List<LineRenderer> _attackLineRenders  = new List<LineRenderer>();
+    private readonly List<LineRenderer> _defenseLineRenders = new List<LineRenderer>();
+    private          LineRenderer       _currentLineRenderer;
 
-    //µ±Ç°ÏßÌõµÄµãÊı£¬µãµÄ±àºÅ
-    private int _vertexCount = 0;
-    private int _strokeId = -1;
-    public bool IsDraw = false;
-    private int _currentAttackArea = -1;
+    //å½“å‰çº¿æ¡çš„ç‚¹æ•°ï¼Œç‚¹çš„ç¼–å·
+    private int   _vertexCount       = 0;
+    private int   _strokeId          = -1;
+    public  bool  IsDraw             = false;
+    private int   _currentAttackArea = -1;
     private float _liveTime;
 
-    void Start()
+    private void Start()
     {
-        //¿ò¶¨»æ»­·¶Î§
+        //æ¡†å®šç»˜ç”»èŒƒå›´
         _drawArea = new Rect(Screen.width * 0.31f, Screen.height * 0.17f, Screen.width * 0.38f, Screen.height * 0.68f);
 
-        //¶ÁÈ¡ÑµÁ·µÄµã¼¯
-        string[] filePaths = Directory.GetFiles(Application.persistentDataPath, "*.xml");
-        foreach (string filePath in filePaths)
+        //è¯»å–è®­ç»ƒçš„ç‚¹é›†
+        var filePaths = Directory.GetFiles(Application.persistentDataPath, "*.xml");
+        foreach (var filePath in filePaths)
             _trainSet.Add(GestureIO.ReadGestureFromFile(filePath));
     }
 
-    void Update()
+    private void Update()
     {
-        if (IsDraw)
+        if (!IsDraw) return;
+        if (Input.GetMouseButton(0))
         {
+            _virtualKeyPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y);
+        } //è·å–é¼ æ ‡ä½ç½®
+
+        if (_drawArea.Contains(_virtualKeyPosition))
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                _currentAttackArea = 0;
+                ++_strokeId;
+                _liveTime = 0;
+
+                {
+                    var tmpGesture =
+                        Instantiate(GesturePrefabTransform, transform.position, transform.rotation,
+                                    _attackTransform) as Transform;
+                    _currentLineRenderer = tmpGesture.GetComponent<LineRenderer>();
+
+                    _attackLineRenders.Add(_currentLineRenderer);
+                } //æ–°å»ºä¸€æ¡çº¿
+
+                _vertexCount = 0;
+            } //å¼€å§‹ä¸‹ç¬”
+
             if (Input.GetMouseButton(0))
             {
-                _virtualKeyPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y);
-            } //»ñÈ¡Êó±êÎ»ÖÃ
+                _liveTime += Time.deltaTime;
 
-            if (_drawArea.Contains(_virtualKeyPosition))
-            {
-                if (Input.GetMouseButtonDown(0))
+                switch (_currentAttackArea)
                 {
-                    _currentAttackArea = 0;
-                    ++_strokeId;
-                    _liveTime = 0;
-
+                    case 0:
                     {
-                        Transform tmpGesture =
-                            Instantiate(GesturePrefabTransform, transform.position, transform.rotation,
-                                _attackTransform) as Transform;
-                        _curretnLineRenderer = tmpGesture.GetComponent<LineRenderer>();
+                        _attackPoints.Add(new Point(_virtualKeyPosition.x, -_virtualKeyPosition.y, _strokeId));
 
-                        _attackLineRenderers.Add(_curretnLineRenderer);
-                    } //ĞÂ½¨Ò»ÌõÏß
-
-                    _vertexCount = 0;
-                } //¿ªÊ¼ÏÂ±Ê
-
-                if (Input.GetMouseButton(0))
-                {
-                    _liveTime += Time.deltaTime;
-
-                    switch (_currentAttackArea)
-                    {
-                        case 0:
-                        {
-                            _attackPoints.Add(new Point(_virtualKeyPosition.x, -_virtualKeyPosition.y, _strokeId));
-
-                            _curretnLineRenderer.positionCount = ++_vertexCount;
-                            _curretnLineRenderer.SetPosition(_vertexCount - 1,
-                                Camera.main.ScreenToWorldPoint(
-                                    new Vector3(_virtualKeyPosition.x, _virtualKeyPosition.y, 10)));
-                            break;
-                        }
-                        case 1:
-                        {
-                            OnDefenseMouseUp();
-                            break;
-                        }
-                        default:
-                            break;
+                        _currentLineRenderer.positionCount = ++_vertexCount;
+                        _currentLineRenderer.SetPosition(_vertexCount - 1,
+                                                         Camera.main.ScreenToWorldPoint(
+                                                          new Vector3(_virtualKeyPosition.x,
+                                                                      _virtualKeyPosition.y, 10)));
+                        break;
                     }
-
-                    if (_liveTime >= 0.5f)
-                    {
-                        _currentAttackArea = -1;
-                        OnAttackMouseUp();
-                    }
-                } //¶¯±Ê
-
-                if (Input.GetMouseButtonUp(0))
-                {
-                    OnAttackMouseUp();
-                } //Ì§±Ê
-            } //»æ»­Î»ÖÃÎ»ÓÚdrawArea
-
-            else
-            {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    _currentAttackArea = 1;
-                    ++_strokeId;
-                    _liveTime = 0;
-                    {
-                        Transform tmpGesture =
-                            Instantiate(GesturePrefabTransform, transform.position, transform.rotation,
-                                _defenceTransform) as Transform;
-                        _curretnLineRenderer = tmpGesture.GetComponent<LineRenderer>();
-
-                        _defenceLineRenderers.Add(_curretnLineRenderer);
-                    } //ĞÂ½¨Ò»ÌõÏß
-
-                    _vertexCount = 0;
-                } //¿ªÊ¼ÏÂ±Ê
-
-                if (Input.GetMouseButton(0))
-                {
-                    _liveTime += Time.deltaTime;
-
-                    switch (_currentAttackArea)
-                    {
-                        case 1:
-                        {
-                            _defencePoints.Add(new Point(_virtualKeyPosition.x, -_virtualKeyPosition.y, _strokeId));
-
-                            _curretnLineRenderer.positionCount = ++_vertexCount;
-                            _curretnLineRenderer.SetPosition(_vertexCount - 1,
-                                Camera.main.ScreenToWorldPoint(
-                                    new Vector3(_virtualKeyPosition.x, _virtualKeyPosition.y, 10)));
-                            break;
-                        }
-                        case 0:
-                        {
-                            OnAttackMouseUp();
-                            break;
-                        }
-                        default:
-                            break;
-                    }
-
-                    if (_liveTime >= 0.5f)
+                    case 1:
                     {
                         OnDefenseMouseUp();
-                        _currentAttackArea = -1;
+                        break;
                     }
                 }
 
-                if (Input.GetMouseButtonUp(0))
+                if (_liveTime >= 0.5f)
+                {
+                    _currentAttackArea = -1;
+                    OnAttackMouseUp();
+                }
+            } //åŠ¨ç¬”
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                OnAttackMouseUp();
+            } //æŠ¬ç¬”
+        }     //ç»˜ç”»ä½ç½®ä½äºdrawArea
+
+        else
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                _currentAttackArea = 1;
+                ++_strokeId;
+                _liveTime = 0;
+                {
+                    var tmpGesture =
+                        Instantiate(GesturePrefabTransform, transform.position, transform.rotation,
+                                    _defenceTransform) as Transform;
+                    _currentLineRenderer = tmpGesture.GetComponent<LineRenderer>();
+
+                    _defenseLineRenders.Add(_currentLineRenderer);
+                } //æ–°å»ºä¸€æ¡çº¿
+
+                _vertexCount = 0;
+            } //å¼€å§‹ä¸‹ç¬”
+
+            if (Input.GetMouseButton(0))
+            {
+                _liveTime += Time.deltaTime;
+
+                switch (_currentAttackArea)
+                {
+                    case 1:
+                    {
+                        _defencePoints.Add(new Point(_virtualKeyPosition.x, -_virtualKeyPosition.y, _strokeId));
+
+                        _currentLineRenderer.positionCount = ++_vertexCount;
+                        _currentLineRenderer.SetPosition(_vertexCount - 1,
+                                                         Camera.main.ScreenToWorldPoint(
+                                                          new Vector3(_virtualKeyPosition.x,
+                                                                      _virtualKeyPosition.y, 10)));
+                        break;
+                    }
+                    case 0:
+                    {
+                        OnAttackMouseUp();
+                        break;
+                    }
+                    default:
+                        break;
+                }
+
+                if (_liveTime >= 0.5f)
                 {
                     OnDefenseMouseUp();
+                    _currentAttackArea = -1;
                 }
-            } //²»ÔÚdrawArea
-
-            if (Input.GetAxisRaw("Cancel") != 0)
-            {
-                ClearAttackDraw();
             }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                OnDefenseMouseUp();
+            }
+        } //ä¸åœ¨drawArea
+
+        if (Input.GetAxisRaw("Cancel") != 0)
+        {
+            ClearAttackDraw();
         }
     }
 
@@ -183,59 +179,59 @@ public class TestDraw : MonoBehaviour
 
         _attackPoints.Clear();
 
-        foreach (LineRenderer lineRenderer in _attackLineRenderers)
+        foreach (var lineRenderer in _attackLineRenders)
         {
             lineRenderer.positionCount = 0;
             Destroy(lineRenderer.gameObject);
         }
 
-        _attackLineRenderers.Clear();
+        _attackLineRenders.Clear();
     }
 
-    void ClearDefenceDraw()
+    private void ClearDefenseDraw()
     {
         _strokeId = -1;
 
         _defencePoints.Clear();
 
-        foreach (LineRenderer lineRenderer in _defenceLineRenderers)
+        foreach (var lineRenderer in _defenseLineRenders)
         {
             lineRenderer.positionCount = 0;
             Destroy(lineRenderer.gameObject);
         }
 
-        _defenceLineRenderers.Clear();
+        _defenseLineRenders.Clear();
     }
 
-    int RecognizeGesture()
+    private int RecognizeGesture()
     {
-        Gesture candidate = new Gesture(_attackPoints.ToArray());
-        Result gestureResult = PointCloudRecognizer.Classify(candidate, _trainSet.ToArray());
-        if (gestureResult.GestureClass == "target") return 1;
+        var candidate     = new Gesture(_attackPoints.ToArray());
+        var gestureResult = PointCloudRecognizer.Classify(candidate, _trainSet.ToArray());
+        Debug.Log(gestureResult.Score);
+        if (gestureResult.Score > 0.85 && gestureResult.GestureClass == "target") return 1;
         return 0;
     }
 
-    void OnAttackMouseUp()
+    private void OnAttackMouseUp()
     {
         _currentAttackArea = -1;
-        if (_attackPoints.Count > 1)
+        if (_attackPoints.Count <= 1) return;
+        var result = RecognizeGesture();
+        if (result == 1)
         {
-            int result = RecognizeGesture();
-            if (result == 1)
-            {
-                _musicMgr.AttackNote(1000);
-                ClearAttackDraw();
-            }
-            else
-            {
-                _musicMgr.AttackNote(200);
-            }
+            Debug.Log("reco");
+            _musicMgr.AttackNote(1000);
+            ClearAttackDraw();
+        }
+        else
+        {
+            _musicMgr.AttackNote(200);
         }
     }
 
     public void OnDefenseMouseUp()
     {
         _currentAttackArea = -1;
-        ClearDefenceDraw();
+        ClearDefenseDraw();
     }
 }

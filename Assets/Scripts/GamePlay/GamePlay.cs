@@ -1,90 +1,87 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
-using UnityEngine.SceneManagement;
 
 public class GamePlay : MonoBehaviour
 {
-    [Header("Player")] public PlayMusic MyPlayMusic;
-    public VideoPlayer MyPlayer;
-    public GameObject BackToEndButtonGameObject;
-    [Header("Scripts and Objects")] public TestDraw Draw;
-    public GameObject Play;
-    public Text PlayText;
-    [Header("Animator")] public Animator TextAnimator;
-    public Animator DefenceAnimator;
-    public Animator AttackAnimator;
-    public Animator DeadAnimator;
-    public Animator EndAnimator;
+    [Header("Player")] public              PlayMusic   MyPlayMusic;
+    public                                 VideoPlayer MyPlayer;
+    public                                 GameObject  BackToEndButtonGameObject;
+    [Header("Scripts and Objects")] public TestDraw    Draw;
+    public                                 GameObject  Play;
+    public                                 Text        PlayText;
+    [Header("Animator")] public            Animator    TextAnimator;
+    public                                 Animator    DefenceAnimator;
+    public                                 Animator    AttackAnimator;
+    public                                 Animator    DeadAnimator;
+    public                                 Animator    EndAnimator;
 
-    private int step = 0;
-    private bool isDown;
+    private int  _step = 0;
+    private bool _isDown;
 
-    void Start()
+    private void Start()
     {
         TextAnimator.SetBool("isbegin", true);
-        isDown = false;
+        _isDown = false;
     }
 
     public void Change()
     {
-        if (!isDown)
+        if (_isDown) return;
+        _isDown = true;
+        switch (_step)
         {
-            isDown = true;
-            switch (step)
-            {
-                case 0:
-                    TextAnimator.SetBool("isend", true);
-                    TextAnimator.SetBool("isbegin", false);
-                    StartCoroutine(waiter1("Äã£¬ÊÇÒ»Î»ÀËµ´½­ºşµÄ\nÏÀ¿Í"));
-                    step++;
-                    break;
-                case 1:
-                    TextAnimator.SetBool("isend", true);
-                    TextAnimator.SetBool("isbegin", false);
-                    StartCoroutine(waiter1("ÔÚ°×É«È¦È¦ÄÚÍ¨¹ı»­Ïß\nÄã¿ÉÒÔ¡°¹¥»÷¡±±ğÈË"));
-                    step++;
-                    break;
-                case 2:
-                    TextAnimator.SetBool("isend", true);
-                    TextAnimator.SetBool("isbegin", false);
-                    StartCoroutine(waiter5("ÕâÀïÓĞ¸öºìÉ«µÄÈ¦È¦\nµ±ËüÊÕËõµ½°×È¦´óĞ¡µÄÊ±ºò\n¾ÍÊÇÄã¹¥»÷µÄÊ±»ú"));
-                    step++;
-                    break;
-                case 3:
-                    TextAnimator.SetBool("isend", true);
-                    TextAnimator.SetBool("isbegin", false);
-                    StartCoroutine(waiter1("Äã¹¥»÷µÄÃ¿¸öºÛ¼£¶¼»áÁôÏÂ\nµ±ºÛ¼£×é³É¡°ÈÊ¡±×ÖµÄÊ±ºò\n»á¶ÔµĞÈËÔì³É´óÁ¿ÉËº¦"));
-                    step++;
-                    break;
-                case 4:
-                    TextAnimator.SetBool("isend", true);
-                    TextAnimator.SetBool("isbegin", false);
-                    StartCoroutine(waiter1("Í¬Ê±£¬Äã¿ÉÒÔ°´ÏÂE¼ü\n»á²Á³ıÆÁÄ»ÉÏµÄËùÓĞºÛ¼£"));
-                    step++;
-                    break;
-                case 5:
-                    TextAnimator.SetBool("isend", true);
-                    TextAnimator.SetBool("isbegin", false);
-                    StartCoroutine(waiter4("ÔÚ°×É«È¦È¦Íâ£¬ÓĞÊ±»á³öÏÖ\nºìÉ«µÄµĞÈË"));
-                    step++;
-                    break;
-                case 6:
-                    TextAnimator.SetBool("isend", true);
-                    TextAnimator.SetBool("isbegin", false);
-                    StartCoroutine(waiter3("ÓÃÄãµÄµ¶Õ¶ÏòËûÃÇ£¬\n·ÀÖ¹ËûÃÇ¶ÔÄãÔì³ÉÉËº¦"));
-                    step++;
-                    break;
-                case 7:
-                    TextAnimator.SetBool("isend", true);
-                    TextAnimator.SetBool("isbegin", false);
-                    StartCoroutine(waiter1("Ëµ¶àÁËÈİÒ×Ê¹ÈË·³Ôê\n²»ÈçÀ´ÊÔÊÔ¿´°É£¡"));
-                    step++;
-                    StartCoroutine(waiter2());
-                    break;
-            }
+            case 0:
+                TextAnimator.SetBool("isend",   true);
+                TextAnimator.SetBool("isbegin", false);
+                StartCoroutine(waiter1("ä½ ï¼Œæ˜¯ä¸€ä½æµªè¡æ±Ÿæ¹–çš„\nä¾ å®¢"));
+                _step++;
+                break;
+            case 1:
+                TextAnimator.SetBool("isend",   true);
+                TextAnimator.SetBool("isbegin", false);
+                StartCoroutine(waiter1("åœ¨ç™½è‰²åœˆåœˆå†…é€šè¿‡ç”»çº¿\nä½ å¯ä»¥â€œæ”»å‡»â€åˆ«äºº"));
+                _step++;
+                break;
+            case 2:
+                TextAnimator.SetBool("isend",   true);
+                TextAnimator.SetBool("isbegin", false);
+                StartCoroutine(waiter5("è¿™é‡Œæœ‰ä¸ªçº¢è‰²çš„åœˆåœˆ\nå½“å®ƒæ”¶ç¼©åˆ°ç™½åœˆå¤§å°çš„æ—¶å€™\nå°±æ˜¯ä½ æ”»å‡»çš„æ—¶æœº"));
+                _step++;
+                break;
+            case 3:
+                TextAnimator.SetBool("isend",   true);
+                TextAnimator.SetBool("isbegin", false);
+                StartCoroutine(waiter1("ä½ æ”»å‡»çš„æ¯ä¸ªç—•è¿¹éƒ½ä¼šç•™ä¸‹\nå½“ç—•è¿¹ç»„æˆâ€œä»â€å­—çš„æ—¶å€™\nä¼šå¯¹æ•Œäººé€ æˆå¤§é‡ä¼¤å®³"));
+                _step++;
+                break;
+            case 4:
+                TextAnimator.SetBool("isend",   true);
+                TextAnimator.SetBool("isbegin", false);
+                StartCoroutine(waiter1("åŒæ—¶ï¼Œä½ å¯ä»¥æŒ‰ä¸‹Eé”®\nä¼šæ“¦é™¤å±å¹•ä¸Šçš„æ‰€æœ‰ç—•è¿¹"));
+                _step++;
+                break;
+            case 5:
+                TextAnimator.SetBool("isend",   true);
+                TextAnimator.SetBool("isbegin", false);
+                StartCoroutine(waiter4("åœ¨ç™½è‰²åœˆåœˆå¤–ï¼Œæœ‰æ—¶ä¼šå‡ºç°\nçº¢è‰²çš„æ•Œäºº"));
+                _step++;
+                break;
+            case 6:
+                TextAnimator.SetBool("isend",   true);
+                TextAnimator.SetBool("isbegin", false);
+                StartCoroutine(waiter3("ç”¨ä½ çš„åˆ€æ–©å‘ä»–ä»¬ï¼Œ\nï¼ˆé¼ æ ‡åˆ’è¿‡æ•Œäººï¼‰\né˜²æ­¢ä»–ä»¬å¯¹ä½ é€ æˆä¼¤å®³"));
+                _step++;
+                break;
+            case 7:
+                TextAnimator.SetBool("isend",   true);
+                TextAnimator.SetBool("isbegin", false);
+                StartCoroutine(waiter1("è¯å·²è‡³æ­¤\nä¸å¦‚æ¥è¯•è¯•çœ‹å§ï¼"));
+                _step++;
+                StartCoroutine(waiter2());
+                break;
         }
     }
 
@@ -92,10 +89,10 @@ public class GamePlay : MonoBehaviour
     {
         Draw.IsDraw = false;
         EndAnimator.gameObject.SetActive(true);
-        EndAnimator.SetBool("isend", false);
+        EndAnimator.SetBool("isend",   false);
         EndAnimator.SetBool("isbegin", true);
 
-        StartCoroutine(waiter1("¹§Ï²Í¨¹Ø£¡"));
+        StartCoroutine(waiter1("æ­å–œé€šå…³ï¼"));
 
         Draw.ClearAttackDraw();
         BackToEndButtonGameObject.SetActive(true);
@@ -117,15 +114,15 @@ public class GamePlay : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
         PlayText.text = textMessage;
-        TextAnimator.SetBool("isend", false);
+        TextAnimator.SetBool("isend",   false);
         TextAnimator.SetBool("isbegin", true);
-        isDown = false;
+        _isDown = false;
     }
 
     IEnumerator waiter2()
     {
         yield return new WaitForSeconds(3);
-        TextAnimator.SetBool("isend", true);
+        TextAnimator.SetBool("isend",   true);
         TextAnimator.SetBool("isbegin", false);
 
         yield return new WaitForSeconds(1);
@@ -134,15 +131,22 @@ public class GamePlay : MonoBehaviour
         Play.SetActive(false);
     }
 
+    public void BeginPlay()
+    {
+        MyPlayMusic.BeginPlay();
+        Draw.IsDraw = true;
+        Play.SetActive(false);
+    }
+
     IEnumerator waiter3(string textMessage)
     {
         yield return new WaitForSeconds(2);
-        DefenceAnimator.SetBool("IsBegin", false);
+        DefenceAnimator.SetBool("IsBegin",  false);
         DefenceAnimator.SetBool("IsAttack", true);
         PlayText.text = textMessage;
-        TextAnimator.SetBool("isend", false);
+        TextAnimator.SetBool("isend",   false);
         TextAnimator.SetBool("isbegin", true);
-        isDown = false;
+        _isDown = false;
     }
 
     IEnumerator waiter4(string textMessage)
@@ -151,30 +155,30 @@ public class GamePlay : MonoBehaviour
         DefenceAnimator.SetBool("IsBegin", true);
         yield return new WaitForSeconds(1.5f);
         PlayText.text = textMessage;
-        TextAnimator.SetBool("isend", false);
+        TextAnimator.SetBool("isend",   false);
         TextAnimator.SetBool("isbegin", true);
-        isDown = false;
+        _isDown = false;
     }
 
     IEnumerator waiter5(string textMessage)
     {
         yield return new WaitForSeconds(2);
-        AttackAnimator.SetBool("isBegin", true);
+        AttackAnimator.SetBool("isBegin",  true);
         AttackAnimator.SetBool("isAttack", true);
         PlayText.text = textMessage;
-        TextAnimator.SetBool("isend", false);
+        TextAnimator.SetBool("isend",   false);
         TextAnimator.SetBool("isbegin", true);
         yield return new WaitForSeconds(0.4f);
-        AttackAnimator.SetBool("isBegin", false);
+        AttackAnimator.SetBool("isBegin",  false);
         AttackAnimator.SetBool("isAttack", false);
 
-        isDown = false;
+        _isDown = false;
     }
 
     IEnumerator waiterFinal()
     {
         yield return new WaitForSeconds(3);
-        EndAnimator.SetBool("isend", true);
+        EndAnimator.SetBool("isend",   true);
         EndAnimator.SetBool("isbegin", false);
         yield return new WaitForSeconds(2);
         EndAnimator.gameObject.SetActive(false);

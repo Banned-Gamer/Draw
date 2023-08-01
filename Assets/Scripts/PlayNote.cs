@@ -1,49 +1,43 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayNote : MonoBehaviour
 {
-    private int _i;
+    private int   _i;
     private float _sumTime;
-    private bool _isbegin = false;
-    private bool _isStop = false;
+    private bool  _isBegin = false;
+    private bool  _isStop  = false;
 
     private Animator _selfAnimator;
 
     private const string _beginAttackNote = "isBegin";
-    private const string _moveAttackNote = "isAttack";
+    private const string MoveAttackNote   = "isAttack";
 
-    void Start()
+    private void Start()
     {
         _selfAnimator = GetComponent<Animator>();
     }
 
-    void Update()
+    private void Update()
     {
-        if (_isbegin)
+        if (!_isBegin) return;
+        _sumTime += Time.deltaTime;
+        if (_sumTime > 1 && _isStop)
         {
-            _sumTime += Time.deltaTime;
-            if (_sumTime > 1 && _isStop)
-            {
-                _isStop = false;
-                _selfAnimator.SetBool(_beginAttackNote, false);
-            }//begin×´Ì¬ÐèÒª¹Ø±Õ£¬µ«ÓÖ²»ÊÇÒ»¿ªÊ¼¾Í¹Ø±Õ£¬ËùÒÔ¾²ÖÃÒ»Ãë
+            _isStop = false;
+            _selfAnimator.SetBool(_beginAttackNote, false);
+        } //beginçŠ¶æ€éœ€è¦å…³é—­ï¼Œä½†åˆä¸æ˜¯ä¸€å¼€å§‹å°±å…³é—­ï¼Œæ‰€ä»¥é™ç½®ä¸€ç§’
 
-            if (_sumTime > 2)
-            {
-                _isbegin = false;
-                _selfAnimator.SetBool(_moveAttackNote, false);
-            }
-        }
+        if (!(_sumTime > 2)) return;
+        _isBegin = false;
+        _selfAnimator.SetBool(MoveAttackNote, false);
     }
 
     public void BeginAttackNote()
     {
         _selfAnimator.SetBool(_beginAttackNote, true);
-        _selfAnimator.SetBool(_moveAttackNote, true);
-        _isbegin = true;
-        _isStop = true;
+        _selfAnimator.SetBool(MoveAttackNote,   true);
+        _isBegin = true;
+        _isStop  = true;
         _sumTime = 0;
     }
 
@@ -52,7 +46,7 @@ public class PlayNote : MonoBehaviour
         _isStop = false;
         _selfAnimator.SetBool(_beginAttackNote, false);
 
-        _isbegin = false;
-        _selfAnimator.SetBool(_moveAttackNote, false);
+        _isBegin = false;
+        _selfAnimator.SetBool(MoveAttackNote, false);
     }
 }

@@ -1,124 +1,119 @@
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayMusic : MonoBehaviour
 {
-    [Header("Show Text")] public Text ScoreText;
-    [Header("Animators")] public Animator ComboAnimator;
-    public Animator MissAnimator;
-    [Header("Data and Scripts")] public MusicSo MusicData;
-    public GamePlay MyGame;
+    [Header("Show Text")] public        Text     ScoreText;
+    [Header("Animators")] public        Animator ComboAnimator;
+    public                              Animator MissAnimator;
+    [Header("Data and Scripts")] public MusicSo  MusicData;
+    public                              GamePlay MyGame;
 
-    public Image HurtImage;
-    [Header("Time")] public float MoveTime;
-    public float GoodTime;
-    public float DefenceDelayTime;
-    [Header("Number")] public int CurrentDefenceIndex;
+    public                    Image HurtImage;
+    [Header("Time")] public   float MoveTime;
+    public                    float GoodTime;
+    public                    float DefenceDelayTime;
+    [Header("Number")] public int   CurrentDefenceIndex;
 
     [SerializeField, Header("Object father")]
     private Transform _attackCircleParent;
 
     [SerializeField] private Transform _defenceParent;
 
-    private List<PlayNote> _attackCircles = new List<PlayNote>();
-    private List<PlayNote> _onUsedAttackCircles = new List<PlayNote>();
+    private readonly List<PlayNote> _attackCircles       = new();
+    private readonly List<PlayNote> _onUsedAttackCircles = new();
 
-    private List<PlayDefenceNote> _defenceNotes = new List<PlayDefenceNote>();
-    private List<PlayDefenceNote> _onUsedDefenceNotes = new List<PlayDefenceNote>();
+    private readonly List<PlayDefenceNote> _defenseNotes       = new();
+    private readonly List<PlayDefenceNote> _onUsedDefenseNotes = new();
 
-    private List<float> _attackBeginNoteTimes = new List<float>();
-    private List<float> _attackBeginTimes = new List<float>();
-    private List<float> _attackEndTimes = new List<float>();
+    private readonly List<float> _attackBeginNoteTimes = new();
+    private readonly List<float> _attackBeginTimes     = new();
+    private readonly List<float> _attackEndTimes       = new();
 
-    private List<float> _defenceBeginNoteTimes = new List<float>();
-    private List<float> _defenceBeginTimes = new List<float>();
-    private List<float> _defenceEndTimes = new List<float>();
+    private readonly List<float> _defenseBeginNoteTimes = new();
+    private readonly List<float> _defenseBeginTimes     = new();
+    private readonly List<float> _defenseEndTimes       = new();
 
     private AudioSource _audioSource;
 
-    private int _i;
-    private int _noteNumb;
-    private int _attackPointNumb;
-    private int _defencePointNumb;
-    private int _currentAttackIndex;
-    private int _currentAttackUsableIndex;
-    private int _currentDefenceUsableIndex;
-    private int _gameScore;
+    private int   _i;
+    private int   _noteNumb;
+    private int   _attackPointNumb;
+    private int   _defensePointNumb;
+    private int   _currentAttackIndex;
+    private int   _currentAttackUsableIndex;
+    private int   _currentDefenseUsableIndex;
+    private int   _gameScore;
     private float _gameHealth;
     private float _sumTime;
     private float _targetTime;
-    private bool _isPlay = false;
+    private bool  _isPlay;
 
-    void Start()
+    private void Start()
     {
-        _isPlay = false;
-        _audioSource = GetComponent<AudioSource>();
+        _isPlay           = false;
+        _audioSource      = GetComponent<AudioSource>();
         _audioSource.clip = MusicData.MyAudio;
-        HurtImage.color = new Color(255, 255, 255, 0);
+        HurtImage.color   = new Color(255, 255, 255, 0);
     }
 
-    void Update()
+    private void Update()
     {
-        if (_isPlay)
+        if (!_isPlay) return;
+        //è®¡ç®—æ—¶é—´
+        _sumTime += Time.deltaTime;
+
+        if (_currentAttackUsableIndex < _attackPointNumb)
         {
-            //¼ÆËãÊ±¼ä
-            _sumTime += Time.deltaTime;
-
-            if (_currentAttackUsableIndex < _attackPointNumb)
+            if (_sumTime >= _attackBeginNoteTimes[_currentAttackUsableIndex])
             {
-                if (_sumTime >= _attackBeginNoteTimes[_currentAttackUsableIndex])
-                {
-                    BeginAttack();
+                BeginAttack();
 
-                    _currentAttackUsableIndex++;
-                }
-            } //¿ªÊ¼·ÅÖÃ¹¥»÷note
-
-            if (_currentDefenceUsableIndex < _defencePointNumb)
-            {
-                if (_sumTime >= _defenceBeginNoteTimes[_currentDefenceUsableIndex])
-                {
-                    BeginDefence();
-
-                    _currentDefenceUsableIndex++;
-                }
-            } //¿ªÊ¼·ÅÖÃ·ÀÓùnote
-
-            if (_currentAttackIndex < _attackPointNumb)
-            {
-                if (_sumTime > _attackEndTimes[_currentAttackIndex])
-                {
-                    MissAnimator.SetBool("IsAcitivity", true);
-                    StartCoroutine(waitor2());
-                    EndAttack();
-                    _currentAttackIndex++;
-                } //µ½´ï¹¥»÷noteµÄ½áÊøÊ±¼ä
+                _currentAttackUsableIndex++;
             }
+        } //å¼€å§‹æ”¾ç½®æ”»å‡»note
 
-            if (CurrentDefenceIndex < _defencePointNumb)
+        if (_currentDefenseUsableIndex < _defensePointNumb)
+        {
+            if (_sumTime >= _defenseBeginNoteTimes[_currentDefenseUsableIndex])
             {
-                if (_sumTime > _defenceEndTimes[CurrentDefenceIndex])
-                {
-                    EndDefence();
-                    MissAnimator.SetBool("IsAcitivity", true);
-                    StartCoroutine(waitor2());
+                BeginDefense();
 
-                    CurrentDefenceIndex++;
-                } //µ½´ï·ÀÓùnoteµÄ½áÊøÊ±¼ä
+                _currentDefenseUsableIndex++;
             }
+        } //å¼€å§‹æ”¾ç½®é˜²å¾¡note
 
-
-            if (_sumTime >= _targetTime)
+        if (_currentAttackIndex < _attackPointNumb)
+        {
+            if (_sumTime > _attackEndTimes[_currentAttackIndex])
             {
-                _isPlay = false;
-                _audioSource.Stop();
-                MyGame.end();
-            } //³¬½ç£¬Í£Ö¹ÒôÀÖºÍ¼ÆÊ±
+                MissAnimator.SetBool("IsAcitivity", true);
+                StartCoroutine(waitor2());
+                EndAttack();
+                _currentAttackIndex++;
+            } //åˆ°è¾¾æ”»å‡»noteçš„ç»“æŸæ—¶é—´
         }
+
+        if (CurrentDefenceIndex < _defensePointNumb)
+        {
+            if (_sumTime > _defenseEndTimes[CurrentDefenceIndex])
+            {
+                EndDefense();
+                MissAnimator.SetBool("IsAcitivity", true);
+                StartCoroutine(waitor2());
+
+                CurrentDefenceIndex++;
+            } //åˆ°è¾¾é˜²å¾¡noteçš„ç»“æŸæ—¶é—´
+        }
+
+
+        if (!(_sumTime >= _targetTime)) return;
+        _isPlay = false;
+        _audioSource.Stop();
+        MyGame.end();
+        //è¶…ç•Œï¼Œåœæ­¢éŸ³ä¹å’Œè®¡æ—¶
     }
 
     public void BeginPlay()
@@ -129,15 +124,14 @@ public class PlayMusic : MonoBehaviour
                 _onUsedAttackCircles.Clear();
                 _attackCircles.Clear();
             }
-            GameObject nowObject;
 
             _noteNumb = _attackCircleParent.childCount;
             for (_i = 0; _i < _noteNumb; _i++)
             {
-                nowObject = _attackCircleParent.GetChild(_i).gameObject;
+                var nowObject = _attackCircleParent.GetChild(_i).gameObject;
                 _attackCircles.Add(nowObject.GetComponent<PlayNote>());
             }
-        } //¸üĞÂ¹¥»÷noteµÄÁĞ±í
+        } //æ›´æ–°æ”»å‡»noteçš„åˆ—è¡¨
 
         {
             List<float> timePoints = MusicData.AttackPoints;
@@ -147,175 +141,152 @@ public class PlayMusic : MonoBehaviour
                 _attackBeginNoteTimes.Clear();
                 _attackBeginTimes.Clear();
                 _attackEndTimes.Clear();
-            } // ÇåÀítimes
+            } // æ¸…ç†times
 
             for (int i = 0; i < _attackPointNumb; i++)
             {
                 _attackBeginNoteTimes.Add(timePoints[i] - GoodTime / 1000);
                 _attackBeginTimes.Add(timePoints[i] - GoodTime / 1000 + MoveTime);
                 _attackEndTimes.Add(timePoints[i] + GoodTime / 1000 + MoveTime);
-            } //ÖØĞÂÌí¼Ótimes
-        } //¸üĞÂµÇ¼Ç¹¥»÷Ê±¼ä
+            } //é‡æ–°æ·»åŠ times
+        }     //æ›´æ–°ç™»è®°æ”»å‡»æ—¶é—´
 
         {
             {
-                _onUsedDefenceNotes.Clear();
-                _defenceNotes.Clear();
+                _onUsedDefenseNotes.Clear();
+                _defenseNotes.Clear();
             }
 
-            GameObject nowObject;
             _noteNumb = _defenceParent.childCount;
             for (_i = 0; _i < _noteNumb; _i++)
             {
-                nowObject = _defenceParent.GetChild(_i).gameObject;
-                _defenceNotes.Add(nowObject.GetComponent<PlayDefenceNote>());
+                var nowObject = _defenceParent.GetChild(_i).gameObject;
+                _defenseNotes.Add(nowObject.GetComponent<PlayDefenceNote>());
             }
-        } //¸üĞÂ·ÀÓùnoteµÄÁĞ±í
+        } //æ›´æ–°é˜²å¾¡noteçš„åˆ—è¡¨
 
         {
-            List<MusicSo.DefencePoint> defencePoints = MusicData.DefencePoints;
-            _defencePointNumb = defencePoints.Count;
+            List<MusicSo.DefencePoint> defensePoints = MusicData.DefencePoints;
+            _defensePointNumb = defensePoints.Count;
 
             {
-                _defenceBeginNoteTimes.Clear();
-                _defenceBeginTimes.Clear();
-                _defenceEndTimes.Clear();
+                _defenseBeginNoteTimes.Clear();
+                _defenseBeginTimes.Clear();
+                _defenseEndTimes.Clear();
             }
 
-            for (_i = 0; _i < _defencePointNumb; _i++)
+            for (_i = 0; _i < _defensePointNumb; _i++)
             {
-                _defenceBeginNoteTimes.Add(defencePoints[_i].TimePoint - GoodTime / 1000 - DefenceDelayTime);
-                _defenceBeginTimes.Add(defencePoints[_i].TimePoint - GoodTime / 1000 + MoveTime);
-                _defenceEndTimes.Add(defencePoints[_i].TimePoint + GoodTime / 1000 + MoveTime);
+                _defenseBeginNoteTimes.Add(defensePoints[_i].TimePoint - GoodTime / 1000 - DefenceDelayTime);
+                _defenseBeginTimes.Add(defensePoints[_i].TimePoint - GoodTime / 1000 + MoveTime);
+                _defenseEndTimes.Add(defensePoints[_i].TimePoint + GoodTime / 1000 + MoveTime);
             }
         }
 
         {
-            _gameHealth = 100;
-            _gameScore = 0;
+            _gameHealth    = 100;
+            _gameScore     = 0;
             ScoreText.text = _gameScore.ToString();
         }
 
         {
-            _sumTime = 0;
-            _currentAttackIndex = 0;
+            _sumTime                  = 0;
+            _currentAttackIndex       = 0;
             _currentAttackUsableIndex = 0;
 
-            CurrentDefenceIndex = 0;
-            _currentDefenceUsableIndex = 0;
-            _targetTime = MusicData.MaxTime;
-        } //Ê±¼äºÍindex¹éÁã
+            CurrentDefenceIndex        = 0;
+            _currentDefenseUsableIndex = 0;
+            _targetTime                = MusicData.MaxTime;
+        } //æ—¶é—´å’Œindexå½’é›¶
 
         _isPlay = true;
 
         _audioSource.PlayDelayed(MoveTime);
     }
 
-    void BeginAttack()
+    private void BeginAttack()
     {
-        if (_attackCircles.Count > 0)
-        {
-            PlayNote nowObject;
-            nowObject = _attackCircles[0];
-            _attackCircles.RemoveAt(0);
-            _onUsedAttackCircles.Add(nowObject);
-            nowObject.BeginAttackNote();
-        }
-    } //¿ªÊ¼·ÅÖÃ¹¥»÷note
+        if (_attackCircles.Count <= 0) return;
+        var nowObject = _attackCircles[0];
+        _attackCircles.RemoveAt(0);
+        _onUsedAttackCircles.Add(nowObject);
+        nowObject.BeginAttackNote();
+    } //å¼€å§‹æ”¾ç½®æ”»å‡»note
 
-    void EndAttack()
+    private void EndAttack()
     {
         ScoreText.text = _gameScore.ToString();
-        if (_onUsedAttackCircles.Count > 0)
-        {
-            PlayNote nowObject;
-            nowObject = _onUsedAttackCircles[0];
-            _attackCircles.Add(nowObject);
-            _attackCircles.Add(nowObject);
-            _onUsedAttackCircles.RemoveAt(0);
+        if (_onUsedAttackCircles.Count <= 0) return;
+        var nowObject = _onUsedAttackCircles[0];
+        _attackCircles.Add(nowObject);
+        _attackCircles.Add(nowObject);
+        _onUsedAttackCircles.RemoveAt(0);
 
-            nowObject.EndAttackNote();
-        }
-    } //³¬Ê±£¬½áÊø¹¥»÷note
+        nowObject.EndAttackNote();
+    } //è¶…æ—¶ï¼Œç»“æŸæ”»å‡»note
 
     public void AttackNote(int Score)
     {
         Debug.Log("add attack" + _currentAttackIndex + ' ' + _attackPointNumb);
-        if (_currentAttackIndex < _attackPointNumb)
+        if (_currentAttackIndex >= _attackPointNumb) return;
+        if (!(_sumTime >= _attackBeginTimes[_currentAttackIndex]) ||
+            !(_sumTime <= _attackEndTimes[_currentAttackIndex])) return;
+        Debug.Log("attack finish");
         {
-            if (_sumTime >= _attackBeginTimes[_currentAttackIndex] && _sumTime <= _attackEndTimes[_currentAttackIndex])
-            {
-                Debug.Log("attack finish");
-                {
-                    _gameScore += Score;
-                    ScoreText.text = _gameScore.ToString();
-                }
-                ComboAnimator.SetBool("IsAcitivity", true);
-                StartCoroutine(waitor());
-                EndAttack();
-                _currentAttackIndex++;
-            }
+            _gameScore     += Score;
+            ScoreText.text =  _gameScore.ToString();
         }
-    } //Íæ¼Ò¹¥»÷
+        ComboAnimator.SetBool("IsAcitivity", true);
+        StartCoroutine(waitor());
+        EndAttack();
+        _currentAttackIndex++;
+    } //ç©å®¶æ”»å‡»
 
-    void BeginDefence()
+    private void BeginDefense()
     {
-        List<MusicSo.DefencePoint> defencePoints = MusicData.DefencePoints;
-        if (_defenceNotes.Count > 0)
+        List<MusicSo.DefencePoint> defensePoints = MusicData.DefencePoints;
+        if (_defenseNotes.Count > 0)
         {
-            PlayDefenceNote nowObject;
-            nowObject = _defenceNotes[0];
-            _defenceNotes.RemoveAt(0);
-            _onUsedDefenceNotes.Add(nowObject);
-            int x = _currentDefenceUsableIndex;
-            nowObject.BeginDefenceNote(MusicData.DefencePoints[_currentDefenceUsableIndex], x);
+            var nowObject = _defenseNotes[0];
+            _defenseNotes.RemoveAt(0);
+            _onUsedDefenseNotes.Add(nowObject);
+            var x = _currentDefenseUsableIndex;
+            nowObject.BeginDefenseNote(MusicData.DefencePoints[_currentDefenseUsableIndex], x);
         }
-    } //¿ªÊ¼·ÅÖÃ·ÀÓùnote
+    } //å¼€å§‹æ”¾ç½®é˜²å¾¡note
 
-    void EndDefence()
+    private void EndDefense()
     {
-        if (_onUsedDefenceNotes.Count > 0)
-        {
-            PlayDefenceNote nowObject;
-            nowObject = _onUsedDefenceNotes[0];
-            _defenceNotes.Add(nowObject);
-            _onUsedDefenceNotes.RemoveAt(0);
-            nowObject.EndDefenceNote();
-            _gameHealth -= 2.5f;
-            HurtImage.color = new Color(255, 255, 255, (100 - _gameHealth) / 100);
+        if (_onUsedDefenseNotes.Count <= 0) return;
+        var nowObject = _onUsedDefenseNotes[0];
+        _defenseNotes.Add(nowObject);
+        _onUsedDefenseNotes.RemoveAt(0);
+        nowObject.EndDefenseNote();
+        _gameHealth     -= 2.5f;
+        HurtImage.color =  new Color(255, 255, 255, (100 - _gameHealth) / 100);
 
-            if (_gameHealth <= 0)
-            {
-                _isPlay = false;
-                _audioSource.Stop();
-                MyGame.Dead();
-            }
-        }
-    } //³¬Ê±£¬½áÊø·ÀÓùnote
+        if (!(_gameHealth <= 0)) return;
+        _isPlay = false;
+        _audioSource.Stop();
+        MyGame.Dead();
+    } //è¶…æ—¶ï¼Œç»“æŸé˜²å¾¡note
 
-    public void Defence()
+    public void Defense()
     {
-        if (CurrentDefenceIndex < _defencePointNumb)
-        {
-            if (_sumTime >= _defenceBeginTimes[CurrentDefenceIndex] &&
-                _sumTime <= _defenceEndTimes[CurrentDefenceIndex])
-            {
-                if (_onUsedDefenceNotes.Count > 0)
-                {
-                    PlayDefenceNote nowObject;
-                    nowObject = _onUsedDefenceNotes[0];
-                    _defenceNotes.Add(nowObject);
-                    _onUsedDefenceNotes.RemoveAt(0);
-                    CurrentDefenceIndex++;
+        if (CurrentDefenceIndex >= _defensePointNumb) return;
+        if (!(_sumTime >= _defenseBeginTimes[CurrentDefenceIndex]) ||
+            !(_sumTime <= _defenseEndTimes[CurrentDefenceIndex])) return;
+        if (_onUsedDefenseNotes.Count <= 0) return;
+        var nowObject = _onUsedDefenseNotes[0];
+        _defenseNotes.Add(nowObject);
+        _onUsedDefenseNotes.RemoveAt(0);
+        CurrentDefenceIndex++;
 
-                    _gameScore += 10;
-                    ScoreText.text = _gameScore.ToString();
-                    ComboAnimator.SetBool("IsAcitivity", true);
-                    StartCoroutine(waitor());
-                }
-            }
-        }
-    } //Ö÷¶¯½øĞĞ·ÀÓù
+        _gameScore     += 10;
+        ScoreText.text =  _gameScore.ToString();
+        ComboAnimator.SetBool("IsAcitivity", true);
+        StartCoroutine(waitor());
+    } //ä¸»åŠ¨è¿›è¡Œé˜²å¾¡
 
     IEnumerator waitor()
     {

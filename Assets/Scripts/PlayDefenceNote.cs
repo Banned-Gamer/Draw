@@ -4,15 +4,15 @@ public class PlayDefenceNote : MonoBehaviour
 {
     public PlayMusic MyPlayMusic;
 
-    private MusicSo.DefensePoint _myDefensePoint;
+    private MusicSo.DefencePoint _myDefensePoint;
 
     private Animator _animator;
     private bool     _isShow;
     private int      _currentNumb;
 
-    private const string _Isbegin  = "IsBegin";
-    private const string _IsEnd    = "IsEnd";
-    private const string _IsAttack = "IsAttack";
+    private const string IsBegin  = "IsBegin";
+    private const string IsEnd    = "IsEnd";
+    private const string IsAttack = "IsAttack";
 
     private void Start()
     {
@@ -20,7 +20,7 @@ public class PlayDefenceNote : MonoBehaviour
         _isShow   = false;
     }
 
-    public void BeginDefenseNote(MusicSo.DefensePoint targetDefensePoint, int numb)
+    public void BeginDefenseNote(MusicSo.DefencePoint targetDefensePoint, int numb)
     {
         _currentNumb    = numb;
         _myDefensePoint = targetDefensePoint;
@@ -28,7 +28,7 @@ public class PlayDefenceNote : MonoBehaviour
         _isShow = true;
 
         _animator = GetComponent<Animator>();
-        _animator.SetBool(_Isbegin, true);
+        _animator.SetBool(IsBegin, true);
 
         transform.position = new Vector3(_myDefensePoint.x, _myDefensePoint.y);
     }
@@ -36,8 +36,8 @@ public class PlayDefenceNote : MonoBehaviour
     public void EndDefenseNote()
     {
         if (!_isShow) return;
-        _animator.SetBool(_Isbegin, false);
-        _animator.SetBool(_IsEnd,   true);
+        _animator.SetBool(IsBegin, false);
+        _animator.SetBool(IsEnd,   true);
         _isShow = false;
     }
 
@@ -46,9 +46,9 @@ public class PlayDefenceNote : MonoBehaviour
         if (!_isShow) return;
         if (_currentNumb != MyPlayMusic.CurrentDefenceIndex) return;
         if (collision.tag != "Blade") return;
-        _animator.SetBool(_Isbegin,  false);
-        _animator.SetBool(_IsAttack, true);
+        _animator.SetBool(IsBegin,  false);
+        _animator.SetBool(IsAttack, true);
 
-        MyPlayMusic.Defence();
+        MyPlayMusic.Defense();
     }
 }

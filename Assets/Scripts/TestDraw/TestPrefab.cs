@@ -5,12 +5,12 @@ public class TestPrefab : MonoBehaviour
     public MusicSo data;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        var len = data.DefensePoints.Count;
+        var len = data.DefencePoints.Count;
         for (var i = 0; i < len; i++)
         {
-            Debug.Log($"{data.DefensePoints[i].x} {data.DefensePoints[i].y}");
+            Debug.Log(data.DefencePoints[i].x.ToString() + ' ' + data.DefencePoints[i].y.ToString());
         }
     }
 }

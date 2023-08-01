@@ -22,19 +22,19 @@ public class PlayMusic : MonoBehaviour
 
     [SerializeField] private Transform _defenceParent;
 
-    private List<PlayNote> _attackCircles       = new();
-    private List<PlayNote> _onUsedAttackCircles = new();
+    private readonly List<PlayNote> _attackCircles       = new();
+    private readonly List<PlayNote> _onUsedAttackCircles = new();
 
-    private List<PlayDefenceNote> _defenseNotes       = new();
-    private List<PlayDefenceNote> _onUsedDefenseNotes = new();
+    private readonly List<PlayDefenceNote> _defenseNotes       = new();
+    private readonly List<PlayDefenceNote> _onUsedDefenseNotes = new();
 
-    private List<float> _attackBeginNoteTimes = new();
-    private List<float> _attackBeginTimes     = new();
-    private List<float> _attackEndTimes       = new();
+    private readonly List<float> _attackBeginNoteTimes = new();
+    private readonly List<float> _attackBeginTimes     = new();
+    private readonly List<float> _attackEndTimes       = new();
 
-    private List<float> _defenseBeginNoteTimes = new();
-    private List<float> _defenseBeginTimes     = new();
-    private List<float> _defenseEndTimes       = new();
+    private readonly List<float> _defenseBeginNoteTimes = new();
+    private readonly List<float> _defenseBeginTimes     = new();
+    private readonly List<float> _defenseEndTimes       = new();
 
     private AudioSource _audioSource;
 
@@ -49,9 +49,9 @@ public class PlayMusic : MonoBehaviour
     private float _gameHealth;
     private float _sumTime;
     private float _targetTime;
-    private bool  _isPlay = false;
+    private bool  _isPlay;
 
-    void Start()
+    private void Start()
     {
         _isPlay           = false;
         _audioSource      = GetComponent<AudioSource>();
@@ -59,64 +59,61 @@ public class PlayMusic : MonoBehaviour
         HurtImage.color   = new Color(255, 255, 255, 0);
     }
 
-    void Update()
+    private void Update()
     {
-        if (_isPlay)
+        if (!_isPlay) return;
+        //计算时间
+        _sumTime += Time.deltaTime;
+
+        if (_currentAttackUsableIndex < _attackPointNumb)
         {
-            //计算时间
-            _sumTime += Time.deltaTime;
-
-            if (_currentAttackUsableIndex < _attackPointNumb)
+            if (_sumTime >= _attackBeginNoteTimes[_currentAttackUsableIndex])
             {
-                if (_sumTime >= _attackBeginNoteTimes[_currentAttackUsableIndex])
-                {
-                    BeginAttack();
+                BeginAttack();
 
-                    _currentAttackUsableIndex++;
-                }
-            } //开始放置攻击note
-
-            if (_currentDefenseUsableIndex < _defensePointNumb)
-            {
-                if (_sumTime >= _defenseBeginNoteTimes[_currentDefenseUsableIndex])
-                {
-                    BeginDefence();
-
-                    _currentDefenseUsableIndex++;
-                }
-            } //开始放置防御note
-
-            if (_currentAttackIndex < _attackPointNumb)
-            {
-                if (_sumTime > _attackEndTimes[_currentAttackIndex])
-                {
-                    MissAnimator.SetBool("IsAcitivity", true);
-                    StartCoroutine(waitor2());
-                    EndAttack();
-                    _currentAttackIndex++;
-                } //到达攻击note的结束时间
+                _currentAttackUsableIndex++;
             }
+        } //开始放置攻击note
 
-            if (CurrentDefenceIndex < _defensePointNumb)
+        if (_currentDefenseUsableIndex < _defensePointNumb)
+        {
+            if (_sumTime >= _defenseBeginNoteTimes[_currentDefenseUsableIndex])
             {
-                if (_sumTime > _defenseEndTimes[CurrentDefenceIndex])
-                {
-                    EndDefence();
-                    MissAnimator.SetBool("IsAcitivity", true);
-                    StartCoroutine(waitor2());
+                BeginDefense();
 
-                    CurrentDefenceIndex++;
-                } //到达防御note的结束时间
+                _currentDefenseUsableIndex++;
             }
+        } //开始放置防御note
 
-
-            if (_sumTime >= _targetTime)
+        if (_currentAttackIndex < _attackPointNumb)
+        {
+            if (_sumTime > _attackEndTimes[_currentAttackIndex])
             {
-                _isPlay = false;
-                _audioSource.Stop();
-                MyGame.end();
-            } //超界，停止音乐和计时
+                MissAnimator.SetBool("IsAcitivity", true);
+                StartCoroutine(waitor2());
+                EndAttack();
+                _currentAttackIndex++;
+            } //到达攻击note的结束时间
         }
+
+        if (CurrentDefenceIndex < _defensePointNumb)
+        {
+            if (_sumTime > _defenseEndTimes[CurrentDefenceIndex])
+            {
+                EndDefense();
+                MissAnimator.SetBool("IsAcitivity", true);
+                StartCoroutine(waitor2());
+
+                CurrentDefenceIndex++;
+            } //到达防御note的结束时间
+        }
+
+
+        if (!(_sumTime >= _targetTime)) return;
+        _isPlay = false;
+        _audioSource.Stop();
+        MyGame.end();
+        //超界，停止音乐和计时
     }
 
     public void BeginPlay()
@@ -127,12 +124,11 @@ public class PlayMusic : MonoBehaviour
                 _onUsedAttackCircles.Clear();
                 _attackCircles.Clear();
             }
-            GameObject nowObject;
 
             _noteNumb = _attackCircleParent.childCount;
             for (_i = 0; _i < _noteNumb; _i++)
             {
-                nowObject = _attackCircleParent.GetChild(_i).gameObject;
+                var nowObject = _attackCircleParent.GetChild(_i).gameObject;
                 _attackCircles.Add(nowObject.GetComponent<PlayNote>());
             }
         } //更新攻击note的列表
@@ -161,18 +157,17 @@ public class PlayMusic : MonoBehaviour
                 _defenseNotes.Clear();
             }
 
-            GameObject nowObject;
             _noteNumb = _defenceParent.childCount;
             for (_i = 0; _i < _noteNumb; _i++)
             {
-                nowObject = _defenceParent.GetChild(_i).gameObject;
+                var nowObject = _defenceParent.GetChild(_i).gameObject;
                 _defenseNotes.Add(nowObject.GetComponent<PlayDefenceNote>());
             }
         } //更新防御note的列表
 
         {
-            List<MusicSo.DefensePoint> defencePoints = MusicData.DefensePoints;
-            _defensePointNumb = defencePoints.Count;
+            List<MusicSo.DefencePoint> defensePoints = MusicData.DefencePoints;
+            _defensePointNumb = defensePoints.Count;
 
             {
                 _defenseBeginNoteTimes.Clear();
@@ -182,9 +177,9 @@ public class PlayMusic : MonoBehaviour
 
             for (_i = 0; _i < _defensePointNumb; _i++)
             {
-                _defenseBeginNoteTimes.Add(defencePoints[_i].TimePoint - GoodTime / 1000 - DefenceDelayTime);
-                _defenseBeginTimes.Add(defencePoints[_i].TimePoint - GoodTime / 1000 + MoveTime);
-                _defenseEndTimes.Add(defencePoints[_i].TimePoint + GoodTime / 1000 + MoveTime);
+                _defenseBeginNoteTimes.Add(defensePoints[_i].TimePoint - GoodTime / 1000 - DefenceDelayTime);
+                _defenseBeginTimes.Add(defensePoints[_i].TimePoint - GoodTime / 1000 + MoveTime);
+                _defenseEndTimes.Add(defensePoints[_i].TimePoint + GoodTime / 1000 + MoveTime);
             }
         }
 
@@ -209,110 +204,88 @@ public class PlayMusic : MonoBehaviour
         _audioSource.PlayDelayed(MoveTime);
     }
 
-    void BeginAttack()
+    private void BeginAttack()
     {
-        if (_attackCircles.Count > 0)
-        {
-            PlayNote nowObject;
-            nowObject = _attackCircles[0];
-            _attackCircles.RemoveAt(0);
-            _onUsedAttackCircles.Add(nowObject);
-            nowObject.BeginAttackNote();
-        }
+        if (_attackCircles.Count <= 0) return;
+        var nowObject = _attackCircles[0];
+        _attackCircles.RemoveAt(0);
+        _onUsedAttackCircles.Add(nowObject);
+        nowObject.BeginAttackNote();
     } //开始放置攻击note
 
-    void EndAttack()
+    private void EndAttack()
     {
         ScoreText.text = _gameScore.ToString();
-        if (_onUsedAttackCircles.Count > 0)
-        {
-            PlayNote nowObject;
-            nowObject = _onUsedAttackCircles[0];
-            _attackCircles.Add(nowObject);
-            _attackCircles.Add(nowObject);
-            _onUsedAttackCircles.RemoveAt(0);
+        if (_onUsedAttackCircles.Count <= 0) return;
+        var nowObject = _onUsedAttackCircles[0];
+        _attackCircles.Add(nowObject);
+        _attackCircles.Add(nowObject);
+        _onUsedAttackCircles.RemoveAt(0);
 
-            nowObject.EndAttackNote();
-        }
+        nowObject.EndAttackNote();
     } //超时，结束攻击note
 
     public void AttackNote(int Score)
     {
         Debug.Log("add attack" + _currentAttackIndex + ' ' + _attackPointNumb);
-        if (_currentAttackIndex < _attackPointNumb)
+        if (_currentAttackIndex >= _attackPointNumb) return;
+        if (!(_sumTime >= _attackBeginTimes[_currentAttackIndex]) ||
+            !(_sumTime <= _attackEndTimes[_currentAttackIndex])) return;
+        Debug.Log("attack finish");
         {
-            if (_sumTime >= _attackBeginTimes[_currentAttackIndex] && _sumTime <= _attackEndTimes[_currentAttackIndex])
-            {
-                Debug.Log("attack finish");
-                {
-                    _gameScore     += Score;
-                    ScoreText.text =  _gameScore.ToString();
-                }
-                ComboAnimator.SetBool("IsAcitivity", true);
-                StartCoroutine(waitor());
-                EndAttack();
-                _currentAttackIndex++;
-            }
+            _gameScore     += Score;
+            ScoreText.text =  _gameScore.ToString();
         }
+        ComboAnimator.SetBool("IsAcitivity", true);
+        StartCoroutine(waitor());
+        EndAttack();
+        _currentAttackIndex++;
     } //玩家攻击
 
-    void BeginDefence()
+    private void BeginDefense()
     {
-        List<MusicSo.DefensePoint> defencePoints = MusicData.DefensePoints;
+        List<MusicSo.DefencePoint> defensePoints = MusicData.DefencePoints;
         if (_defenseNotes.Count > 0)
         {
-            PlayDefenceNote nowObject;
-            nowObject = _defenseNotes[0];
+            var nowObject = _defenseNotes[0];
             _defenseNotes.RemoveAt(0);
             _onUsedDefenseNotes.Add(nowObject);
-            int x = _currentDefenseUsableIndex;
-            nowObject.BeginDefenseNote(MusicData.DefensePoints[_currentDefenseUsableIndex], x);
+            var x = _currentDefenseUsableIndex;
+            nowObject.BeginDefenseNote(MusicData.DefencePoints[_currentDefenseUsableIndex], x);
         }
     } //开始放置防御note
 
-    void EndDefence()
+    private void EndDefense()
     {
-        if (_onUsedDefenseNotes.Count > 0)
-        {
-            PlayDefenceNote nowObject;
-            nowObject = _onUsedDefenseNotes[0];
-            _defenseNotes.Add(nowObject);
-            _onUsedDefenseNotes.RemoveAt(0);
-            nowObject.EndDefenseNote();
-            //_gameHealth -= 2.5f;
-            HurtImage.color = new Color(255, 255, 255, (100 - _gameHealth) / 100);
+        if (_onUsedDefenseNotes.Count <= 0) return;
+        var nowObject = _onUsedDefenseNotes[0];
+        _defenseNotes.Add(nowObject);
+        _onUsedDefenseNotes.RemoveAt(0);
+        nowObject.EndDefenseNote();
+        _gameHealth     -= 2.5f;
+        HurtImage.color =  new Color(255, 255, 255, (100 - _gameHealth) / 100);
 
-            if (_gameHealth <= 0)
-            {
-                _isPlay = false;
-                _audioSource.Stop();
-                MyGame.Dead();
-            }
-        }
+        if (!(_gameHealth <= 0)) return;
+        _isPlay = false;
+        _audioSource.Stop();
+        MyGame.Dead();
     } //超时，结束防御note
 
-    public void Defence()
+    public void Defense()
     {
-        if (CurrentDefenceIndex < _defensePointNumb)
-        {
-            if (_sumTime >= _defenseBeginTimes[CurrentDefenceIndex] &&
-                _sumTime <= _defenseEndTimes[CurrentDefenceIndex])
-            {
-                if (_onUsedDefenseNotes.Count > 0)
-                {
-                    PlayDefenceNote nowObject;
-                    nowObject = _onUsedDefenseNotes[0];
-                    _defenseNotes.Add(nowObject);
-                    _onUsedDefenseNotes.RemoveAt(0);
-                    CurrentDefenceIndex++;
+        if (CurrentDefenceIndex >= _defensePointNumb) return;
+        if (!(_sumTime >= _defenseBeginTimes[CurrentDefenceIndex]) ||
+            !(_sumTime <= _defenseEndTimes[CurrentDefenceIndex])) return;
+        if (_onUsedDefenseNotes.Count <= 0) return;
+        var nowObject = _onUsedDefenseNotes[0];
+        _defenseNotes.Add(nowObject);
+        _onUsedDefenseNotes.RemoveAt(0);
+        CurrentDefenceIndex++;
 
-                    _gameScore     += 10;
-                    ScoreText.text =  _gameScore.ToString();
-                    ComboAnimator.SetBool("IsAcitivity", true);
-                    StartCoroutine(waitor());
-                }
-            }
-        }
+        _gameScore     += 10;
+        ScoreText.text =  _gameScore.ToString();
+        ComboAnimator.SetBool("IsAcitivity", true);
+        StartCoroutine(waitor());
     } //主动进行防御
 
     IEnumerator waitor()

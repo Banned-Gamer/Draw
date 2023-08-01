@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayNote : MonoBehaviour
 {
-    private int _i;
+    private int   _i;
     private float _sumTime;
-    private bool _isbegin = false;
-    private bool _isStop = false;
+    private bool  _isbegin = false;
+    private bool  _isStop  = false;
 
     private Animator _selfAnimator;
 
     private const string _beginAttackNote = "isBegin";
-    private const string _moveAttackNote = "isAttack";
+    private const string _moveAttackNote  = "isAttack";
 
     void Start()
     {
@@ -28,7 +26,7 @@ public class PlayNote : MonoBehaviour
             {
                 _isStop = false;
                 _selfAnimator.SetBool(_beginAttackNote, false);
-            }//begin×´Ì¬ÐèÒª¹Ø±Õ£¬µ«ÓÖ²»ÊÇÒ»¿ªÊ¼¾Í¹Ø±Õ£¬ËùÒÔ¾²ÖÃÒ»Ãë
+            } //beginçŠ¶æ€éœ€è¦å…³é—­ï¼Œä½†åˆä¸æ˜¯ä¸€å¼€å§‹å°±å…³é—­ï¼Œæ‰€ä»¥é™ç½®ä¸€ç§’
 
             if (_sumTime > 2)
             {
@@ -41,9 +39,9 @@ public class PlayNote : MonoBehaviour
     public void BeginAttackNote()
     {
         _selfAnimator.SetBool(_beginAttackNote, true);
-        _selfAnimator.SetBool(_moveAttackNote, true);
+        _selfAnimator.SetBool(_moveAttackNote,  true);
         _isbegin = true;
-        _isStop = true;
+        _isStop  = true;
         _sumTime = 0;
     }
 

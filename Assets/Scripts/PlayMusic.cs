@@ -1,71 +1,69 @@
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayMusic : MonoBehaviour
 {
-    [Header("Show Text")] public Text ScoreText;
-    [Header("Animators")] public Animator ComboAnimator;
-    public Animator MissAnimator;
-    [Header("Data and Scripts")] public MusicSo MusicData;
-    public GamePlay MyGame;
+    [Header("Show Text")] public        Text     ScoreText;
+    [Header("Animators")] public        Animator ComboAnimator;
+    public                              Animator MissAnimator;
+    [Header("Data and Scripts")] public MusicSo  MusicData;
+    public                              GamePlay MyGame;
 
-    public Image HurtImage;
-    [Header("Time")] public float MoveTime;
-    public float GoodTime;
-    public float DefenceDelayTime;
-    [Header("Number")] public int CurrentDefenceIndex;
+    public                    Image HurtImage;
+    [Header("Time")] public   float MoveTime;
+    public                    float GoodTime;
+    public                    float DefenceDelayTime;
+    [Header("Number")] public int   CurrentDefenceIndex;
 
     [SerializeField, Header("Object father")]
     private Transform _attackCircleParent;
 
     [SerializeField] private Transform _defenceParent;
 
-    private List<PlayNote> _attackCircles = new List<PlayNote>();
-    private List<PlayNote> _onUsedAttackCircles = new List<PlayNote>();
+    private List<PlayNote> _attackCircles       = new();
+    private List<PlayNote> _onUsedAttackCircles = new();
 
-    private List<PlayDefenceNote> _defenceNotes = new List<PlayDefenceNote>();
-    private List<PlayDefenceNote> _onUsedDefenceNotes = new List<PlayDefenceNote>();
+    private List<PlayDefenceNote> _defenseNotes       = new();
+    private List<PlayDefenceNote> _onUsedDefenseNotes = new();
 
-    private List<float> _attackBeginNoteTimes = new List<float>();
-    private List<float> _attackBeginTimes = new List<float>();
-    private List<float> _attackEndTimes = new List<float>();
+    private List<float> _attackBeginNoteTimes = new();
+    private List<float> _attackBeginTimes     = new();
+    private List<float> _attackEndTimes       = new();
 
-    private List<float> _defenceBeginNoteTimes = new List<float>();
-    private List<float> _defenceBeginTimes = new List<float>();
-    private List<float> _defenceEndTimes = new List<float>();
+    private List<float> _defenseBeginNoteTimes = new();
+    private List<float> _defenseBeginTimes     = new();
+    private List<float> _defenseEndTimes       = new();
 
     private AudioSource _audioSource;
 
-    private int _i;
-    private int _noteNumb;
-    private int _attackPointNumb;
-    private int _defencePointNumb;
-    private int _currentAttackIndex;
-    private int _currentAttackUsableIndex;
-    private int _currentDefenceUsableIndex;
-    private int _gameScore;
+    private int   _i;
+    private int   _noteNumb;
+    private int   _attackPointNumb;
+    private int   _defensePointNumb;
+    private int   _currentAttackIndex;
+    private int   _currentAttackUsableIndex;
+    private int   _currentDefenseUsableIndex;
+    private int   _gameScore;
     private float _gameHealth;
     private float _sumTime;
     private float _targetTime;
-    private bool _isPlay = false;
+    private bool  _isPlay = false;
 
     void Start()
     {
-        _isPlay = false;
-        _audioSource = GetComponent<AudioSource>();
+        _isPlay           = false;
+        _audioSource      = GetComponent<AudioSource>();
         _audioSource.clip = MusicData.MyAudio;
-        HurtImage.color = new Color(255, 255, 255, 0);
+        HurtImage.color   = new Color(255, 255, 255, 0);
     }
 
     void Update()
     {
         if (_isPlay)
         {
-            //¼ÆËãÊ±¼ä
+            //è®¡ç®—æ—¶é—´
             _sumTime += Time.deltaTime;
 
             if (_currentAttackUsableIndex < _attackPointNumb)
@@ -76,17 +74,17 @@ public class PlayMusic : MonoBehaviour
 
                     _currentAttackUsableIndex++;
                 }
-            } //¿ªÊ¼·ÅÖÃ¹¥»÷note
+            } //å¼€å§‹æ”¾ç½®æ”»å‡»note
 
-            if (_currentDefenceUsableIndex < _defencePointNumb)
+            if (_currentDefenseUsableIndex < _defensePointNumb)
             {
-                if (_sumTime >= _defenceBeginNoteTimes[_currentDefenceUsableIndex])
+                if (_sumTime >= _defenseBeginNoteTimes[_currentDefenseUsableIndex])
                 {
                     BeginDefence();
 
-                    _currentDefenceUsableIndex++;
+                    _currentDefenseUsableIndex++;
                 }
-            } //¿ªÊ¼·ÅÖÃ·ÀÓùnote
+            } //å¼€å§‹æ”¾ç½®é˜²å¾¡note
 
             if (_currentAttackIndex < _attackPointNumb)
             {
@@ -96,19 +94,19 @@ public class PlayMusic : MonoBehaviour
                     StartCoroutine(waitor2());
                     EndAttack();
                     _currentAttackIndex++;
-                } //µ½´ï¹¥»÷noteµÄ½áÊøÊ±¼ä
+                } //åˆ°è¾¾æ”»å‡»noteçš„ç»“æŸæ—¶é—´
             }
 
-            if (CurrentDefenceIndex < _defencePointNumb)
+            if (CurrentDefenceIndex < _defensePointNumb)
             {
-                if (_sumTime > _defenceEndTimes[CurrentDefenceIndex])
+                if (_sumTime > _defenseEndTimes[CurrentDefenceIndex])
                 {
                     EndDefence();
                     MissAnimator.SetBool("IsAcitivity", true);
                     StartCoroutine(waitor2());
 
                     CurrentDefenceIndex++;
-                } //µ½´ï·ÀÓùnoteµÄ½áÊøÊ±¼ä
+                } //åˆ°è¾¾é˜²å¾¡noteçš„ç»“æŸæ—¶é—´
             }
 
 
@@ -117,7 +115,7 @@ public class PlayMusic : MonoBehaviour
                 _isPlay = false;
                 _audioSource.Stop();
                 MyGame.end();
-            } //³¬½ç£¬Í£Ö¹ÒôÀÖºÍ¼ÆÊ±
+            } //è¶…ç•Œï¼Œåœæ­¢éŸ³ä¹å’Œè®¡æ—¶
         }
     }
 
@@ -137,7 +135,7 @@ public class PlayMusic : MonoBehaviour
                 nowObject = _attackCircleParent.GetChild(_i).gameObject;
                 _attackCircles.Add(nowObject.GetComponent<PlayNote>());
             }
-        } //¸üĞÂ¹¥»÷noteµÄÁĞ±í
+        } //æ›´æ–°æ”»å‡»noteçš„åˆ—è¡¨
 
         {
             List<float> timePoints = MusicData.AttackPoints;
@@ -147,20 +145,20 @@ public class PlayMusic : MonoBehaviour
                 _attackBeginNoteTimes.Clear();
                 _attackBeginTimes.Clear();
                 _attackEndTimes.Clear();
-            } // ÇåÀítimes
+            } // æ¸…ç†times
 
             for (int i = 0; i < _attackPointNumb; i++)
             {
                 _attackBeginNoteTimes.Add(timePoints[i] - GoodTime / 1000);
                 _attackBeginTimes.Add(timePoints[i] - GoodTime / 1000 + MoveTime);
                 _attackEndTimes.Add(timePoints[i] + GoodTime / 1000 + MoveTime);
-            } //ÖØĞÂÌí¼Ótimes
-        } //¸üĞÂµÇ¼Ç¹¥»÷Ê±¼ä
+            } //é‡æ–°æ·»åŠ times
+        }     //æ›´æ–°ç™»è®°æ”»å‡»æ—¶é—´
 
         {
             {
-                _onUsedDefenceNotes.Clear();
-                _defenceNotes.Clear();
+                _onUsedDefenseNotes.Clear();
+                _defenseNotes.Clear();
             }
 
             GameObject nowObject;
@@ -168,43 +166,43 @@ public class PlayMusic : MonoBehaviour
             for (_i = 0; _i < _noteNumb; _i++)
             {
                 nowObject = _defenceParent.GetChild(_i).gameObject;
-                _defenceNotes.Add(nowObject.GetComponent<PlayDefenceNote>());
+                _defenseNotes.Add(nowObject.GetComponent<PlayDefenceNote>());
             }
-        } //¸üĞÂ·ÀÓùnoteµÄÁĞ±í
+        } //æ›´æ–°é˜²å¾¡noteçš„åˆ—è¡¨
 
         {
-            List<MusicSo.DefencePoint> defencePoints = MusicData.DefencePoints;
-            _defencePointNumb = defencePoints.Count;
+            List<MusicSo.DefensePoint> defencePoints = MusicData.DefensePoints;
+            _defensePointNumb = defencePoints.Count;
 
             {
-                _defenceBeginNoteTimes.Clear();
-                _defenceBeginTimes.Clear();
-                _defenceEndTimes.Clear();
+                _defenseBeginNoteTimes.Clear();
+                _defenseBeginTimes.Clear();
+                _defenseEndTimes.Clear();
             }
 
-            for (_i = 0; _i < _defencePointNumb; _i++)
+            for (_i = 0; _i < _defensePointNumb; _i++)
             {
-                _defenceBeginNoteTimes.Add(defencePoints[_i].TimePoint - GoodTime / 1000 - DefenceDelayTime);
-                _defenceBeginTimes.Add(defencePoints[_i].TimePoint - GoodTime / 1000 + MoveTime);
-                _defenceEndTimes.Add(defencePoints[_i].TimePoint + GoodTime / 1000 + MoveTime);
+                _defenseBeginNoteTimes.Add(defencePoints[_i].TimePoint - GoodTime / 1000 - DefenceDelayTime);
+                _defenseBeginTimes.Add(defencePoints[_i].TimePoint - GoodTime / 1000 + MoveTime);
+                _defenseEndTimes.Add(defencePoints[_i].TimePoint + GoodTime / 1000 + MoveTime);
             }
         }
 
         {
-            _gameHealth = 100;
-            _gameScore = 0;
+            _gameHealth    = 100;
+            _gameScore     = 0;
             ScoreText.text = _gameScore.ToString();
         }
 
         {
-            _sumTime = 0;
-            _currentAttackIndex = 0;
+            _sumTime                  = 0;
+            _currentAttackIndex       = 0;
             _currentAttackUsableIndex = 0;
 
-            CurrentDefenceIndex = 0;
-            _currentDefenceUsableIndex = 0;
-            _targetTime = MusicData.MaxTime;
-        } //Ê±¼äºÍindex¹éÁã
+            CurrentDefenceIndex        = 0;
+            _currentDefenseUsableIndex = 0;
+            _targetTime                = MusicData.MaxTime;
+        } //æ—¶é—´å’Œindexå½’é›¶
 
         _isPlay = true;
 
@@ -221,7 +219,7 @@ public class PlayMusic : MonoBehaviour
             _onUsedAttackCircles.Add(nowObject);
             nowObject.BeginAttackNote();
         }
-    } //¿ªÊ¼·ÅÖÃ¹¥»÷note
+    } //å¼€å§‹æ”¾ç½®æ”»å‡»note
 
     void EndAttack()
     {
@@ -236,7 +234,7 @@ public class PlayMusic : MonoBehaviour
 
             nowObject.EndAttackNote();
         }
-    } //³¬Ê±£¬½áÊø¹¥»÷note
+    } //è¶…æ—¶ï¼Œç»“æŸæ”»å‡»note
 
     public void AttackNote(int Score)
     {
@@ -247,8 +245,8 @@ public class PlayMusic : MonoBehaviour
             {
                 Debug.Log("attack finish");
                 {
-                    _gameScore += Score;
-                    ScoreText.text = _gameScore.ToString();
+                    _gameScore     += Score;
+                    ScoreText.text =  _gameScore.ToString();
                 }
                 ComboAnimator.SetBool("IsAcitivity", true);
                 StartCoroutine(waitor());
@@ -256,32 +254,32 @@ public class PlayMusic : MonoBehaviour
                 _currentAttackIndex++;
             }
         }
-    } //Íæ¼Ò¹¥»÷
+    } //ç©å®¶æ”»å‡»
 
     void BeginDefence()
     {
-        List<MusicSo.DefencePoint> defencePoints = MusicData.DefencePoints;
-        if (_defenceNotes.Count > 0)
+        List<MusicSo.DefensePoint> defencePoints = MusicData.DefensePoints;
+        if (_defenseNotes.Count > 0)
         {
             PlayDefenceNote nowObject;
-            nowObject = _defenceNotes[0];
-            _defenceNotes.RemoveAt(0);
-            _onUsedDefenceNotes.Add(nowObject);
-            int x = _currentDefenceUsableIndex;
-            nowObject.BeginDefenceNote(MusicData.DefencePoints[_currentDefenceUsableIndex], x);
+            nowObject = _defenseNotes[0];
+            _defenseNotes.RemoveAt(0);
+            _onUsedDefenseNotes.Add(nowObject);
+            int x = _currentDefenseUsableIndex;
+            nowObject.BeginDefenseNote(MusicData.DefensePoints[_currentDefenseUsableIndex], x);
         }
-    } //¿ªÊ¼·ÅÖÃ·ÀÓùnote
+    } //å¼€å§‹æ”¾ç½®é˜²å¾¡note
 
     void EndDefence()
     {
-        if (_onUsedDefenceNotes.Count > 0)
+        if (_onUsedDefenseNotes.Count > 0)
         {
             PlayDefenceNote nowObject;
-            nowObject = _onUsedDefenceNotes[0];
-            _defenceNotes.Add(nowObject);
-            _onUsedDefenceNotes.RemoveAt(0);
-            nowObject.EndDefenceNote();
-            _gameHealth -= 2.5f;
+            nowObject = _onUsedDefenseNotes[0];
+            _defenseNotes.Add(nowObject);
+            _onUsedDefenseNotes.RemoveAt(0);
+            nowObject.EndDefenseNote();
+            //_gameHealth -= 2.5f;
             HurtImage.color = new Color(255, 255, 255, (100 - _gameHealth) / 100);
 
             if (_gameHealth <= 0)
@@ -291,31 +289,31 @@ public class PlayMusic : MonoBehaviour
                 MyGame.Dead();
             }
         }
-    } //³¬Ê±£¬½áÊø·ÀÓùnote
+    } //è¶…æ—¶ï¼Œç»“æŸé˜²å¾¡note
 
     public void Defence()
     {
-        if (CurrentDefenceIndex < _defencePointNumb)
+        if (CurrentDefenceIndex < _defensePointNumb)
         {
-            if (_sumTime >= _defenceBeginTimes[CurrentDefenceIndex] &&
-                _sumTime <= _defenceEndTimes[CurrentDefenceIndex])
+            if (_sumTime >= _defenseBeginTimes[CurrentDefenceIndex] &&
+                _sumTime <= _defenseEndTimes[CurrentDefenceIndex])
             {
-                if (_onUsedDefenceNotes.Count > 0)
+                if (_onUsedDefenseNotes.Count > 0)
                 {
                     PlayDefenceNote nowObject;
-                    nowObject = _onUsedDefenceNotes[0];
-                    _defenceNotes.Add(nowObject);
-                    _onUsedDefenceNotes.RemoveAt(0);
+                    nowObject = _onUsedDefenseNotes[0];
+                    _defenseNotes.Add(nowObject);
+                    _onUsedDefenseNotes.RemoveAt(0);
                     CurrentDefenceIndex++;
 
-                    _gameScore += 10;
-                    ScoreText.text = _gameScore.ToString();
+                    _gameScore     += 10;
+                    ScoreText.text =  _gameScore.ToString();
                     ComboAnimator.SetBool("IsAcitivity", true);
                     StartCoroutine(waitor());
                 }
             }
         }
-    } //Ö÷¶¯½øĞĞ·ÀÓù
+    } //ä¸»åŠ¨è¿›è¡Œé˜²å¾¡
 
     IEnumerator waitor()
     {

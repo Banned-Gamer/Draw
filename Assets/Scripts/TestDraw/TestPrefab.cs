@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TestPrefab : MonoBehaviour
@@ -9,10 +7,10 @@ public class TestPrefab : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int len = data.DefencePoints.Count;
-        for (int i = 0; i < len; i++)
+        var len = data.DefensePoints.Count;
+        for (var i = 0; i < len; i++)
         {
-            Debug.Log(data.DefencePoints[i].x.ToString() + ' ' + data.DefencePoints[i].y.ToString());
+            Debug.Log($"{data.DefensePoints[i].x} {data.DefensePoints[i].y}");
         }
     }
 }

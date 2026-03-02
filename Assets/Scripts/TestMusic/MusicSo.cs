@@ -6,17 +6,17 @@ public class MusicSo : ScriptableObject
 {
     public AudioClip          MyAudio;
     public List<float>        AttackPoints;
-    public List<DefensePoint> DefensePoints;
+    public List<DefencePoint> DefencePoints;
     public float              MaxTime;
 
     [System.Serializable]
-    public class DefensePoint
+    public class DefencePoint
     {
         public float TimePoint;
         public float x;
         public float y;
 
-        public DefensePoint(float timePoint, float inX, float inY)
+        public DefencePoint(float timePoint, float inX, float inY)
         {
             TimePoint = timePoint;
             x         = inX;

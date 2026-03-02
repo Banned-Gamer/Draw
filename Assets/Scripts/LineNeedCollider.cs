@@ -9,8 +9,8 @@ public class LineNeedCollider : MonoBehaviour
 
     private void Start()
     {
-        _myEdgeCollider2D = this.GetComponent<EdgeCollider2D>();
-        _myLine           = this.GetComponent<LineRenderer>();
+        _myEdgeCollider2D = GetComponent<EdgeCollider2D>();
+        _myLine           = GetComponent<LineRenderer>();
     }
 
     // Update is called once per frame
@@ -19,7 +19,7 @@ public class LineNeedCollider : MonoBehaviour
         SetEdgeCollider(_myLine);
     }
 
-    void SetEdgeCollider(LineRenderer lineRenderer)
+    private void SetEdgeCollider(LineRenderer lineRenderer)
     {
         var edges = new List<Vector2>();
         for (var i = 0; i < lineRenderer.positionCount; i++)

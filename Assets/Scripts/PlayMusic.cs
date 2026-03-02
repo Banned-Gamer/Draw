@@ -5,22 +5,37 @@ using UnityEngine.UI;
 
 public class PlayMusic : MonoBehaviour
 {
-    [Header("Show Text")] public        Text     ScoreText;
-    [Header("Animators")] public        Animator ComboAnimator;
-    public                              Animator MissAnimator;
-    [Header("Data and Scripts")] public MusicSo  MusicData;
-    public                              GamePlay MyGame;
+    private static readonly int IsActivity = Animator.StringToHash("IsActivity");
 
-    public                    Image HurtImage;
-    [Header("Time")] public   float MoveTime;
-    public                    float GoodTime;
-    public                    float DefenceDelayTime;
-    [Header("Number")] public int   CurrentDefenceIndex;
+    [Header("Show Text")]
+    public Text scoreText;
+
+    [Header("Animators")]
+    public Animator ComboAnimator;
+
+    public Animator MissAnimator;
+
+    [Header("Data and Scripts")]
+    public MusicSo MusicData;
+
+    public GamePlay MyGame;
+
+    public Image HurtImage;
+
+    [Header("Time")]
+    public float moveTime;
+
+    public float goodTime;
+    public float defenceDelayTime;
+
+    [Header("Number")]
+    public int currentDefenceIndex;
 
     [SerializeField, Header("Object father")]
-    private Transform _attackCircleParent;
+    private Transform attackCircleParent;
 
-    [SerializeField] private Transform _defenceParent;
+    [SerializeField]
+    private Transform defenceParent;
 
     private readonly List<PlayNote> _attackCircles       = new();
     private readonly List<PlayNote> _onUsedAttackCircles = new();
@@ -89,22 +104,22 @@ public class PlayMusic : MonoBehaviour
         {
             if (_sumTime > _attackEndTimes[_currentAttackIndex])
             {
-                MissAnimator.SetBool("IsAcitivity", true);
-                StartCoroutine(waitor2());
+                MissAnimator.SetBool(IsActivity, true);
+                StartCoroutine(DisableAnimationAfterDelay(MissAnimator, 0.05f));
                 EndAttack();
                 _currentAttackIndex++;
             } //到达攻击note的结束时间
         }
 
-        if (CurrentDefenceIndex < _defensePointNumb)
+        if (currentDefenceIndex < _defensePointNumb)
         {
-            if (_sumTime > _defenseEndTimes[CurrentDefenceIndex])
+            if (_sumTime > _defenseEndTimes[currentDefenceIndex])
             {
                 EndDefense();
-                MissAnimator.SetBool("IsAcitivity", true);
-                StartCoroutine(waitor2());
+                MissAnimator.SetBool(IsActivity, true);
+                StartCoroutine(DisableAnimationAfterDelay(MissAnimator, 0.05f));
 
-                CurrentDefenceIndex++;
+                currentDefenceIndex++;
             } //到达防御note的结束时间
         }
 
@@ -112,7 +127,7 @@ public class PlayMusic : MonoBehaviour
         if (!(_sumTime >= _targetTime)) return;
         _isPlay = false;
         _audioSource.Stop();
-        MyGame.end();
+        MyGame.End();
         //超界，停止音乐和计时
     }
 
@@ -125,16 +140,16 @@ public class PlayMusic : MonoBehaviour
                 _attackCircles.Clear();
             }
 
-            _noteNumb = _attackCircleParent.childCount;
+            _noteNumb = attackCircleParent.childCount;
             for (_i = 0; _i < _noteNumb; _i++)
             {
-                var nowObject = _attackCircleParent.GetChild(_i).gameObject;
+                var nowObject = attackCircleParent.GetChild(_i).gameObject;
                 _attackCircles.Add(nowObject.GetComponent<PlayNote>());
             }
         } //更新攻击note的列表
 
         {
-            List<float> timePoints = MusicData.AttackPoints;
+            var timePoints = MusicData.AttackPoints;
             _attackPointNumb = timePoints.Count;
 
             {
@@ -143,11 +158,11 @@ public class PlayMusic : MonoBehaviour
                 _attackEndTimes.Clear();
             } // 清理times
 
-            for (int i = 0; i < _attackPointNumb; i++)
+            for (var i = 0; i < _attackPointNumb; i++)
             {
-                _attackBeginNoteTimes.Add(timePoints[i] - GoodTime / 1000);
-                _attackBeginTimes.Add(timePoints[i] - GoodTime / 1000 + MoveTime);
-                _attackEndTimes.Add(timePoints[i] + GoodTime / 1000 + MoveTime);
+                _attackBeginNoteTimes.Add(timePoints[i]               - goodTime / 1000);
+                _attackBeginTimes.Add(timePoints[i] - goodTime / 1000 + moveTime);
+                _attackEndTimes.Add(timePoints[i]                     + goodTime / 1000 + moveTime);
             } //重新添加times
         }     //更新登记攻击时间
 
@@ -157,10 +172,10 @@ public class PlayMusic : MonoBehaviour
                 _defenseNotes.Clear();
             }
 
-            _noteNumb = _defenceParent.childCount;
+            _noteNumb = defenceParent.childCount;
             for (_i = 0; _i < _noteNumb; _i++)
             {
-                var nowObject = _defenceParent.GetChild(_i).gameObject;
+                var nowObject = defenceParent.GetChild(_i).gameObject;
                 _defenseNotes.Add(nowObject.GetComponent<PlayDefenceNote>());
             }
         } //更新防御note的列表
@@ -177,16 +192,16 @@ public class PlayMusic : MonoBehaviour
 
             for (_i = 0; _i < _defensePointNumb; _i++)
             {
-                _defenseBeginNoteTimes.Add(defensePoints[_i].TimePoint - GoodTime / 1000 - DefenceDelayTime);
-                _defenseBeginTimes.Add(defensePoints[_i].TimePoint - GoodTime / 1000 + MoveTime);
-                _defenseEndTimes.Add(defensePoints[_i].TimePoint + GoodTime / 1000 + MoveTime);
+                _defenseBeginNoteTimes.Add(defensePoints[_i].TimePoint - goodTime / 1000 - defenceDelayTime);
+                _defenseBeginTimes.Add(defensePoints[_i].TimePoint - goodTime / 1000 + moveTime);
+                _defenseEndTimes.Add(defensePoints[_i].TimePoint + goodTime / 1000 + moveTime);
             }
         }
 
         {
             _gameHealth    = 100;
             _gameScore     = 0;
-            ScoreText.text = _gameScore.ToString();
+            scoreText.text = _gameScore.ToString();
         }
 
         {
@@ -194,14 +209,14 @@ public class PlayMusic : MonoBehaviour
             _currentAttackIndex       = 0;
             _currentAttackUsableIndex = 0;
 
-            CurrentDefenceIndex        = 0;
+            currentDefenceIndex        = 0;
             _currentDefenseUsableIndex = 0;
             _targetTime                = MusicData.MaxTime;
         } //时间和index归零
 
         _isPlay = true;
 
-        _audioSource.PlayDelayed(MoveTime);
+        _audioSource.PlayDelayed(moveTime);
     }
 
     private void BeginAttack()
@@ -215,7 +230,7 @@ public class PlayMusic : MonoBehaviour
 
     private void EndAttack()
     {
-        ScoreText.text = _gameScore.ToString();
+        scoreText.text = _gameScore.ToString();
         if (_onUsedAttackCircles.Count <= 0) return;
         var nowObject = _onUsedAttackCircles[0];
         _attackCircles.Add(nowObject);
@@ -225,7 +240,7 @@ public class PlayMusic : MonoBehaviour
         nowObject.EndAttackNote();
     } //超时，结束攻击note
 
-    public void AttackNote(int Score)
+    public void AttackNote(int score)
     {
         Debug.Log("add attack" + _currentAttackIndex + ' ' + _attackPointNumb);
         if (_currentAttackIndex >= _attackPointNumb) return;
@@ -233,26 +248,24 @@ public class PlayMusic : MonoBehaviour
             !(_sumTime <= _attackEndTimes[_currentAttackIndex])) return;
         Debug.Log("attack finish");
         {
-            _gameScore     += Score;
-            ScoreText.text =  _gameScore.ToString();
+            _gameScore     += score;
+            scoreText.text =  _gameScore.ToString();
         }
-        ComboAnimator.SetBool("IsAcitivity", true);
-        StartCoroutine(waitor());
+        ComboAnimator.SetBool(IsActivity, true);
+        StartCoroutine(DisableAnimationAfterDelay(ComboAnimator, 0.05f));
         EndAttack();
         _currentAttackIndex++;
     } //玩家攻击
 
     private void BeginDefense()
     {
-        List<MusicSo.DefencePoint> defensePoints = MusicData.DefencePoints;
-        if (_defenseNotes.Count > 0)
-        {
-            var nowObject = _defenseNotes[0];
-            _defenseNotes.RemoveAt(0);
-            _onUsedDefenseNotes.Add(nowObject);
-            var x = _currentDefenseUsableIndex;
-            nowObject.BeginDefenseNote(MusicData.DefencePoints[_currentDefenseUsableIndex], x);
-        }
+        var defensePoints = MusicData.DefencePoints;
+        if (_defenseNotes.Count <= 0) return;
+        var nowObject = _defenseNotes[0];
+        _defenseNotes.RemoveAt(0);
+        _onUsedDefenseNotes.Add(nowObject);
+        var x = _currentDefenseUsableIndex;
+        nowObject.BeginDefenseNote(defensePoints[_currentDefenseUsableIndex], x);
     } //开始放置防御note
 
     private void EndDefense()
@@ -273,30 +286,24 @@ public class PlayMusic : MonoBehaviour
 
     public void Defense()
     {
-        if (CurrentDefenceIndex >= _defensePointNumb) return;
-        if (!(_sumTime >= _defenseBeginTimes[CurrentDefenceIndex]) ||
-            !(_sumTime <= _defenseEndTimes[CurrentDefenceIndex])) return;
+        if (currentDefenceIndex >= _defensePointNumb) return;
+        if (!(_sumTime >= _defenseBeginTimes[currentDefenceIndex]) ||
+            !(_sumTime <= _defenseEndTimes[currentDefenceIndex])) return;
         if (_onUsedDefenseNotes.Count <= 0) return;
         var nowObject = _onUsedDefenseNotes[0];
         _defenseNotes.Add(nowObject);
         _onUsedDefenseNotes.RemoveAt(0);
-        CurrentDefenceIndex++;
+        currentDefenceIndex++;
 
         _gameScore     += 10;
-        ScoreText.text =  _gameScore.ToString();
-        ComboAnimator.SetBool("IsAcitivity", true);
-        StartCoroutine(waitor());
+        scoreText.text =  _gameScore.ToString();
+        ComboAnimator.SetBool(IsActivity, true);
+        StartCoroutine(DisableAnimationAfterDelay(ComboAnimator, 0.05f));
     } //主动进行防御
 
-    IEnumerator waitor()
+    private static IEnumerator DisableAnimationAfterDelay(Animator targetAnimator, float delay)
     {
-        yield return new WaitForSeconds(0.05f);
-        ComboAnimator.SetBool("IsAcitivity", false);
-    }
-
-    IEnumerator waitor2()
-    {
-        yield return new WaitForSeconds(0.05f);
-        MissAnimator.SetBool("IsAcitivity", false);
+        yield return new WaitForSeconds(delay);
+        targetAnimator.SetBool(IsActivity, false);
     }
 }

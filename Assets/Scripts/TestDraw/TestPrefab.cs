@@ -10,7 +10,7 @@ public class TestPrefab : MonoBehaviour
         var len = data.DefencePoints.Count;
         for (var i = 0; i < len; i++)
         {
-            Debug.Log(data.DefencePoints[i].x.ToString() + ' ' + data.DefencePoints[i].y.ToString());
+            Debug.Log(data.DefencePoints[i].x.ToString() + ' ' + data.DefencePoints[i].y);
         }
     }
 }

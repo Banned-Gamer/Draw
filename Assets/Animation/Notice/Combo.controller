@@ -34,7 +34,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: IsAcitivity
+    m_ConditionEvent: IsActivity
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6179383871001484242}
@@ -59,12 +59,12 @@ AnimatorController:
   m_Name: Combo
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: IsAcitivity
+  - m_Name: IsActivity
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer

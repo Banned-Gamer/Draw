@@ -4,9 +4,10 @@ using UnityEngine.UI;
 
 public class MusicMgr : MonoBehaviour
 {
-    public Text       ScoreText;
-    public Text       ComboText;
-    public Text       ResultText;
+    public Text scoreText;
+    public Text comboText;
+    public Text resultText;
+
     public MusicSo    MusicData;
     public GameObject NoteParent;
     public float      MoveTime;
@@ -35,55 +36,59 @@ public class MusicMgr : MonoBehaviour
 
     public void BeginPlay()
     {
+        #region æ›´æ–°noteçš„Object
+
+        _noteNumb = NoteParent.transform.childCount;
+
+        #region æ¸…ç†notes
+
+        _onUsedNotes.Clear();
+        _notes.Clear();
+
+        #endregion
+
+        for (var i = 0; i < _noteNumb; i++)
         {
-            _noteNumb = NoteParent.transform.childCount;
+            var currentObject = NoteParent.transform.GetChild(i).gameObject;
+            _notes.Add(currentObject.GetComponent<NoteMgr>());
+        }
 
-            {
-                _onUsedNotes.Clear();
-                _notes.Clear();
-            } //ÇåÀínotes
+        #endregion
 
-            for (var i = 0; i < _noteNumb; i++)
-            {
-                var currentObject = NoteParent.transform.GetChild(i).gameObject;
-                _notes.Add(currentObject.GetComponent<NoteMgr>());
-            }
-        } //¸üĞÂnoteµÄObject
+        #region æ›´æ–°ç™»è®°æ—¶é—´
 
+        var timePoints = MusicData.AttackPoints;
+        _pointNumb = timePoints.Count;
+
+        // æ¸…ç†times
+        _beginNoteTimes.Clear();
+        _beginTimes.Clear();
+        _endTimes.Clear();
+        _beginPerfectTimes.Clear();
+        _endPerfectTimes.Clear();
+
+        //é‡æ–°æ·»åŠ times
+        for (var i = 0; i < _pointNumb; i++)
         {
-            var timePoints = MusicData.AttackPoints;
-            _pointNumb = timePoints.Count;
+            _beginNoteTimes.Add(timePoints[i]                         - GoodTime / 1000);
+            _beginTimes.Add(timePoints[i] - GoodTime / 1000           + MoveTime);
+            _endTimes.Add(timePoints[i]                               + GoodTime / 1000 + MoveTime);
+            _beginPerfectTimes.Add(timePoints[i] - PerfectTime / 1000 + MoveTime);
+            _endPerfectTimes.Add(timePoints[i]                        + PerfectTime / 1000 + MoveTime);
+        }
 
-            {
-                _beginNoteTimes.Clear();
-                _beginTimes.Clear();
-                _endTimes.Clear();
-                _beginPerfectTimes.Clear();
-                _endPerfectTimes.Clear();
-            } // ÇåÀítimes
+        #endregion
 
-            for (var i = 0; i < _pointNumb; i++)
-            {
-                _beginNoteTimes.Add(timePoints[i]                         - GoodTime / 1000);
-                _beginTimes.Add(timePoints[i] - GoodTime / 1000           + MoveTime);
-                _endTimes.Add(timePoints[i]                               + GoodTime / 1000 + MoveTime);
-                _beginPerfectTimes.Add(timePoints[i] - PerfectTime / 1000 + MoveTime);
-                _endPerfectTimes.Add(timePoints[i]                        + PerfectTime / 1000 + MoveTime);
-            } //ÖØĞÂÌí¼Ótimes
-        }     //¸üĞÂµÇ¼ÇÊ±¼ä
+        //æ—¶é—´å’Œindexå½’é›¶
+        _sumTime            = 0;
+        _currentIndex       = 0;
+        _currentUsableIndex = 0;
 
-        {
-            _sumTime            = 0;
-            _currentIndex       = 0;
-            _currentUsableIndex = 0;
-        } //Ê±¼äºÍindex¹éÁã
-
-        {
-            _comboNumb     = 0;
-            _gameScore     = 0;
-            ComboText.text = "0";
-            ScoreText.text = "0";
-        } //scoreºÍcombo¹éÁã
+        //scoreå’Œcomboå½’é›¶
+        _comboNumb     = 0;
+        _gameScore     = 0;
+        comboText.text = "0";
+        scoreText.text = "0";
 
         _isPlay = true;
         _audioSource.PlayDelayed(MoveTime);
@@ -141,12 +146,12 @@ public class MusicMgr : MonoBehaviour
                         _comboNumb++;
                         _currentIndex++;
 
-                        ScoreText.text = _gameScore.ToString();
-                        ComboText.text = _comboNumb.ToString();
+                        scoreText.text = _gameScore.ToString();
+                        comboText.text = _comboNumb.ToString();
 
-                        ResultText.text = "Perfect";
+                        resultText.text = "Perfect";
                     }
-                } //PerfectÌõ¼şÏÂ°´ÏÂ°´¼ü
+                } //Perfectæ¡ä»¶ä¸‹æŒ‰ä¸‹æŒ‰é”®
 
                 else if (Input.GetAxisRaw("Submit") != 0)
                 {
@@ -163,12 +168,12 @@ public class MusicMgr : MonoBehaviour
                     _comboNumb++;
                     _currentIndex++;
 
-                    ScoreText.text = _gameScore.ToString();
-                    ComboText.text = _comboNumb.ToString();
+                    scoreText.text = _gameScore.ToString();
+                    comboText.text = _comboNumb.ToString();
 
 
-                    ResultText.text = "Good";
-                } //goodÌõ¼şÏÂ°´ÏÂ°´¼ü
+                    resultText.text = "Good";
+                } //goodæ¡ä»¶ä¸‹æŒ‰ä¸‹æŒ‰é”®
             }
             else if (_sumTime > _endTimes[_currentIndex])
             {
@@ -185,15 +190,15 @@ public class MusicMgr : MonoBehaviour
                 _currentIndex++;
 
 
-                ComboText.text  = _comboNumb.ToString();
-                ResultText.text = "Miss";
-            } //³¬Ê±¾ÍÊÇmiss,Çå¿Õcombo
+                comboText.text  = _comboNumb.ToString();
+                resultText.text = "Miss";
+            } //è¶…æ—¶å°±æ˜¯miss,æ¸…ç©ºcombo
 
 
             if (_currentIndex < _pointNumb) return;
             _isPlay = false;
             _audioSource.Stop();
-            //³¬½ç£¬Í£Ö¹ÒôÀÖºÍ¼ÆÊ±
+            //è¶…ç•Œï¼Œåœæ­¢éŸ³ä¹å’Œè®¡æ—¶
         }
 
         else

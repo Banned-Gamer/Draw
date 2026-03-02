@@ -13,7 +13,7 @@ public class PlayDefenceNote : MonoBehaviour
     private Animator _animator;
     private bool     _isShow;
     private int      _currentNumb;
-    
+
     private void Start()
     {
         _animator = GetComponent<Animator>();

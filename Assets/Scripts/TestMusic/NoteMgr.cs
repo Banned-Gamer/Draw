@@ -48,6 +48,6 @@ public class NoteMgr : MonoBehaviour
     {
         _isBegin = false;
         IsUsable = true;
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 }
